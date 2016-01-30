@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<style>
+
+</style>
+<body>
+    <div id="topbar">
+        <div id="typeA">Text</div>
+        <button id="swap" value="<->"></button>
+        <div id="typeB">Base64</div>
+    </div>
+    <textarea id="io1"></textarea>
+    <textarea id="io2"></textarea>
+    <div id="ad"></div>
+</body>
+<script>
+    function convert(from, to, textToBase64) {
+        if (textToBase64) {
+            to.value = window.btoa(from.value);
+        } else {
+            to.value = window.atob(from.value);
+        }
+    }
+
+    var textToBase64 = true;
+    window.onload = function() {
+        io1.addEventListener('input', function() {
+            convert(io1, io2, textToBase64);
+        });
+        io2.addEventListener('input', function() {
+            convert(io2, io1, !textToBase64);
+        });
+        swap.addEventListener('click', function() {
+            textToBase64 = !textToBase64;
+            typeA.innerText = textToBase64 ? 'Text' : 'Base64';
+            typeB.innerText = textToBase64 ? 'Base64' : 'Text';
+        });
+    }
+</script>
