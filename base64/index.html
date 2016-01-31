@@ -1,38 +1,126 @@
 <!DOCTYPE HTML>
-<style>
-
-</style>
-<body>
-    <div id="topbar">
-        <div id="typeA">Text</div>
-        <button id="swap" value="<->"></button>
-        <div id="typeB">Base64</div>
-    </div>
-    <textarea id="io1"></textarea>
-    <textarea id="io2"></textarea>
-    <div id="ad"></div>
-</body>
-<script>
-    function convert(from, to, textToBase64) {
-        if (textToBase64) {
-            to.value = window.btoa(from.value);
-        } else {
-            to.value = window.atob(from.value);
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="description" content="Base64 converter">
+    <title>Base64 converter</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
         }
-    }
+        body {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
+            flex-direction: column;
+        }
+        .config {
+            -webkit-flex: 0 0 auto;
+            flex: 0 0 auto;
+            background: #eee;
+            border-bottom: 1px solid #999;
+            font-family: sans-serif;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+        }
+        .config .type {
+            -webkit-flex: 1 0 auto;
+            flex: 1 0 auto;
+        }
+        .config #swap {
+            -webkit-flex: 0 0 0;
+            flex: 0 0 0;
+        }
+        .config #typeA {
+            text-align: right;
+        }
+        .io {
+            -webkit-flex: 1 1 auto;
+            flex: 1 1 auto;
+            min-height: 0px;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: row;
+            flex-direction: row;
+        }
+        .io .area {
+            margin: 10px;
+            -webkit-flex: 1 0 auto;
+            flex: 1 0 auto;
+            font-family: monospace;
+            width: 0;
+            outline: none;
+            overflow: auto;
+        }
+        .io .area.error {
+            background: darkred;
+            color: grey;
+        }
+        .ad {
+            -webkit-flex: 0 0 auto;
+            flex: 0 0 auto;
+        }
 
-    var textToBase64 = true;
-    window.onload = function() {
-        io1.addEventListener('input', function() {
-            convert(io1, io2, textToBase64);
-        });
-        io2.addEventListener('input', function() {
-            convert(io2, io1, !textToBase64);
-        });
-        swap.addEventListener('click', function() {
-            textToBase64 = !textToBase64;
-            typeA.innerText = textToBase64 ? 'Text' : 'Base64';
-            typeB.innerText = textToBase64 ? 'Base64' : 'Text';
-        });
-    }
-</script>
+        /* On small screens, stack the areas without margin. */
+        @media (max-width: 1000px) {
+            .io {
+                -webkit-flex-direction: column;
+                flex-direction: column;
+            }
+            .io .area {
+                margin: 0;
+                -webkit-flex: 1 0 auto;
+                flex: 1 0 auto;
+                width: 100%;
+                height: 0px;
+            }
+        }
+
+    </style>
+    <script src="base64.js"></script>
+    <script>
+        function updateConversion(from, to, textToBase64) {
+            var success = function(value) {
+                to.innerText = value;
+                from.classList.remove('error');
+                to.classList.remove('error');
+            }
+            var error = function(message) {
+                from.classList.remove('error');
+                to.classList.add('error');
+                to.innerText = message;
+            }
+            var converter = textToBase64 ? asyncToBase64 : asyncFromBase64;
+            converter(from.innerText, success, error);
+        }
+
+        var textToBase64 = true;
+        window.onload = function() {
+            io1.addEventListener('input', function() {
+                updateConversion(io1, io2, textToBase64);
+            });
+            io2.addEventListener('input', function() {
+                updateConversion(io2, io1, !textToBase64);
+            });
+            swap.addEventListener('click', function() {
+                textToBase64 = !textToBase64;
+                typeA.innerText = textToBase64 ? 'Text' : 'Base64';
+                typeB.innerText = textToBase64 ? 'Base64' : 'Text';
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="config">
+        <div id="typeA" class="type">Text</div>
+        <button id="swap" value="<->"></button>
+        <div id="typeB" class="type">Base64</div>
+    </div>
+    <div class="io">
+        <div id="io1" class="area" contentEditable="true"></div>
+        <div id="io2" class="area" contentEditable="true"></div>
+    </div>
+    <div class="ad"></div>
+</body>
