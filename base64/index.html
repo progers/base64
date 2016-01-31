@@ -2,7 +2,7 @@
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <meta name="description" content="Base64 converter">
-    <title>Base64 converter</title>
+    <title>Base64 Converter</title>
     <style>
         html, body {
             height: 100%;
@@ -13,28 +13,15 @@
             display: flex;
             -webkit-flex-direction: column;
             flex-direction: column;
+            background: #fafafa;
         }
-        .config {
+        .header {
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
-            background: #eee;
-            border-bottom: 1px solid #999;
+            background: #fff;
             font-family: sans-serif;
-            display: -webkit-flex;
-            display: flex;
-            -webkit-align-items: center;
-            align-items: center;
-        }
-        .config .type {
-            -webkit-flex: 1 0 auto;
-            flex: 1 0 auto;
-        }
-        .config #swap {
-            -webkit-flex: 0 0 0;
-            flex: 0 0 0;
-        }
-        .config #typeA {
-            text-align: right;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+            border-radius: 2px;
         }
         .io {
             -webkit-flex: 1 1 auto;
@@ -45,16 +32,38 @@
             -webkit-flex-direction: row;
             flex-direction: row;
         }
-        .io .area {
+        .io .tile {
+            background: #fff;
             margin: 10px;
             -webkit-flex: 1 0 auto;
             flex: 1 0 auto;
-            font-family: monospace;
             width: 0;
             outline: none;
             overflow: auto;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-direction: column;
+            flex-direction: column;
         }
-        .io .area.error {
+        .io .tile .type {
+            margin: 10px;
+            -webkit-flex: 0 0 auto;
+            flex: 0 0 auto;
+            border: 1px solid blue;
+            background: rgba(0,0,180,0.1);
+        }
+        .io .tile .text {
+            margin: 10px;
+            -webkit-flex: 1 1 auto;
+            flex: 1 1 auto;
+            font-family: monospace;
+            outline: none;
+            overflow: auto;
+            border: 1px solid green;
+            background: rgba(180,0,0,0.1);
+        }
+        .io .tile .text.error {
             background: darkred;
             color: grey;
         }
@@ -69,7 +78,7 @@
                 -webkit-flex-direction: column;
                 flex-direction: column;
             }
-            .io .area {
+            .io .tile {
                 margin: 0;
                 -webkit-flex: 1 0 auto;
                 flex: 1 0 auto;
@@ -98,29 +107,32 @@
 
         var textToBase64 = true;
         window.onload = function() {
-            io1.addEventListener('input', function() {
-                updateConversion(io1, io2, textToBase64);
+            io1Text.addEventListener('input', function() {
+                updateConversion(io1Text, io2Text, textToBase64);
             });
-            io2.addEventListener('input', function() {
-                updateConversion(io2, io1, !textToBase64);
-            });
-            swap.addEventListener('click', function() {
-                textToBase64 = !textToBase64;
-                typeA.innerText = textToBase64 ? 'Text' : 'Base64';
-                typeB.innerText = textToBase64 ? 'Base64' : 'Text';
+            io2Text.addEventListener('input', function() {
+                updateConversion(io2Text, io1Text, !textToBase64);
             });
         }
     </script>
 </head>
 <body>
-    <div class="config">
-        <div id="typeA" class="type">Text</div>
-        <button id="swap" value="<->"></button>
-        <div id="typeB" class="type">Base64</div>
+    <div class="header">
+        Base64 Converter
     </div>
     <div class="io">
-        <div id="io1" class="area" contentEditable="true"></div>
-        <div id="io2" class="area" contentEditable="true"></div>
+        <div id="io1" class="tile">
+            <div id="io1Type" class="type">Text</div>
+            <div id="io1Text" class="text" contentEditable="true">
+                abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>
+            </div>
+        </div>
+        <div id="io2" class="tile">
+            <div id="io2Type" class="type">Text</div>
+            <div id="io2Text" class="text" contentEditable="true">
+                abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>
+            </div>
+        </div>
     </div>
     <div class="ad"></div>
 </body>
