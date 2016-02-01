@@ -9,24 +9,28 @@
             margin: 0;
         }
         body {
+            background: #fafafa;
+            font-family: sans-serif;
+
             display: -webkit-flex;
             display: flex;
             -webkit-flex-direction: column;
             flex-direction: column;
-            background: #fafafa;
         }
         .header {
+            background: #607d8b;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+            color: #fff;
+            font-size: large;
+            padding: 1em;
+
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
-            background: #fff;
-            font-family: sans-serif;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.26);
-            border-radius: 2px;
         }
         .io {
             -webkit-flex: 1 1 auto;
             flex: 1 1 auto;
-            min-height: 0px;
+            min-height: 0;
             display: -webkit-flex;
             display: flex;
             -webkit-flex-direction: row;
@@ -34,40 +38,52 @@
         }
         .io .tile {
             background: #fff;
-            margin: 10px;
+            border-radius: 2px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+            margin: 2em;
+
             -webkit-flex: 1 0 auto;
             flex: 1 0 auto;
-            width: 0;
-            outline: none;
-            overflow: auto;
-            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
             display: -webkit-flex;
             display: flex;
             -webkit-flex-direction: column;
             flex-direction: column;
+            width: 0;
         }
+        /* Ensure there's not twice the padding when side-by-side */
+        .io .tile#io1 { margin-right: 1em; }
+        .io .tile#io2 { margin-left: 1em; }
         .io .tile .type {
-            margin: 10px;
+            border-bottom: 1px solid #dbdbdb;
+            color: #607d8b;
+            font-size: medium;
+            font-weight: bold;
+            padding: 1em;
+
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
-            border: 1px solid blue;
-            background: rgba(0,0,180,0.1);
         }
         .io .tile .text {
-            margin: 10px;
-            -webkit-flex: 1 1 auto;
-            flex: 1 1 auto;
             font-family: monospace;
+            margin: 0;
             outline: none;
             overflow: auto;
-            border: 1px solid green;
-            background: rgba(180,0,0,0.1);
+            padding: 1em;
+
+            -webkit-flex: 1 1 auto;
+            flex: 1 1 auto;
         }
-        .io .tile .text.error {
-            background: darkred;
-            color: grey;
+        .io .tile .text.errorSource {
+            border: 1px solid #ff3d00;
+            color: #90a4ae;
+        }
+        .io .tile .text.errorDestination {
+            color: #90a4ae;
         }
         .ad {
+            background: #03a9f4;
+            color: #000;
+
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
         }
@@ -79,26 +95,35 @@
                 flex-direction: column;
             }
             .io .tile {
+                border-radius: 0;
+                box-shadow: none;
                 margin: 0;
+
                 -webkit-flex: 1 0 auto;
                 flex: 1 0 auto;
                 width: 100%;
-                height: 0px;
+                height: 0;
             }
+            /* Remove side-by-side padding special-case. */
+            .io .tile#io1 { margin-right: 0; }
+            .io .tile#io2 { margin-left: 0; }
         }
-
     </style>
     <script src="base64.js"></script>
     <script>
         function updateConversion(from, to, textToBase64) {
             var success = function(value) {
                 to.innerText = value;
-                from.classList.remove('error');
-                to.classList.remove('error');
+                from.classList.remove('errorSource');
+                to.classList.remove('errorSource');
+                from.classList.remove('errorDestination');
+                to.classList.remove('errorDestination');
             }
             var error = function(message) {
-                from.classList.remove('error');
-                to.classList.add('error');
+                from.classList.add('errorSource');
+                to.classList.remove('errorSource');
+                from.classList.remove('errorDestination');
+                to.classList.add('errorDestination');
                 to.innerText = message;
             }
             var converter = textToBase64 ? asyncToBase64 : asyncFromBase64;
@@ -123,15 +148,11 @@
     <div class="io">
         <div id="io1" class="tile">
             <div id="io1Type" class="type">Text</div>
-            <div id="io1Text" class="text" contentEditable="true">
-                abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>
-            </div>
+            <div id="io1Text" class="text" contentEditable="true" spellcheck="false">Hello world</div>
         </div>
         <div id="io2" class="tile">
-            <div id="io2Type" class="type">Text</div>
-            <div id="io2Text" class="text" contentEditable="true">
-                abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>abc<br>
-            </div>
+            <div id="io2Type" class="type">Base64</div>
+            <div id="io2Text" class="text" contentEditable="true" spellcheck="false">SGVsbG8gd29ybGQ=</div>
         </div>
     </div>
     <div class="ad"></div>
