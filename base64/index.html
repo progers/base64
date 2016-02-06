@@ -70,21 +70,40 @@
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
         }
-        .io .tile .text {
+        .io .tile .content {
+            border: none;
             font-family: monospace;
+            font-size: 14px;
+            height: 100%;
             margin: 0;
-            outline: none;
-            overflow: auto;
-            padding: 1em;
+            padding: 0;
+            position: relative;
+
+            /* Margins must equal the total padding on children to ensure scrollbars stay flush. */
+            margin-bottom: 2em;
+            margin-right: 2em;
 
             -webkit-flex: 1 1 auto;
             flex: 1 1 auto;
         }
-        .io .tile .text.errorSource {
+        .io .tile .content .textarea {
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            height: 100%;
+            margin: 0;
+            outline: none;
+            overflow: auto;
+            padding: 1em;
+            position: absolute;
+            resize: none;
+            width: 100%;
+        }
+        .io .tile .content .textarea.errorSource {
             border: 1px solid #ff3d00;
             color: #90a4ae;
         }
-        .io .tile .text.errorDestination {
+        .io .tile .content .textarea.errorDestination {
             color: #90a4ae;
         }
         .ad {
@@ -121,7 +140,7 @@
     <script>
         function updateConversion(from, to, textToBase64) {
             var success = function(value) {
-                to.innerText = value;
+                to.value = value;
                 from.classList.remove('errorSource');
                 to.classList.remove('errorSource');
                 from.classList.remove('errorDestination');
@@ -132,18 +151,20 @@
                 to.classList.remove('errorSource');
                 from.classList.remove('errorDestination');
                 to.classList.add('errorDestination');
-                to.innerText = message;
+                to.value = message;
             }
             var converter = textToBase64 ? asyncToBase64 : asyncFromBase64;
-            converter(from.innerText, success, error);
+            converter(from.value, success, error);
         }
 
         window.onload = function() {
-            io1Text.addEventListener('input', function() {
-                updateConversion(io1Text, io2Text, true);
+            var io1Textarea = document.getElementById('io1Textarea');
+            var io2Textarea = document.getElementById('io2Textarea');
+            io1Textarea.addEventListener('input', function() {
+                updateConversion(io1Textarea, io2Textarea, true);
             });
-            io2Text.addEventListener('input', function() {
-                updateConversion(io2Text, io1Text, false);
+            io2Textarea.addEventListener('input', function() {
+                updateConversion(io2Textarea, io1Textarea, false);
             });
         }
     </script>
@@ -155,11 +176,15 @@
     <div class="io">
         <div id="io1" class="tile">
             <div id="io1Type" class="type">Text</div>
-            <div id="io1Text" class="text" contentEditable="true" spellcheck="false">Hello world</div>
+            <div id="io1Content" class="content">
+                <textarea id="io1Textarea" class="textarea" spellcheck="false">Hello world</textarea>
+            </div>
         </div>
         <div id="io2" class="tile">
             <div id="io2Type" class="type">Base64</div>
-            <div id="io2Text" class="text" contentEditable="true" spellcheck="false">SGVsbG8gd29ybGQ=</div>
+            <div id="io2Content" class="content">
+                <textarea id="io2Textarea" class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
+            </div>
         </div>
     </div>
     <div class="ad"></div>
