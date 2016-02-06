@@ -49,10 +49,10 @@
             /* When squished (mobile landscape), have a minimum standard of readibility. */
             min-height: 7em;
 
-            -webkit-flex: 1 0 auto;
-            flex: 1 0 auto;
             display: -webkit-flex;
             display: flex;
+            -webkit-flex: 1 0 auto;
+            flex: 1 0 auto;
             -webkit-flex-direction: column;
             flex-direction: column;
             width: 0;
@@ -63,8 +63,8 @@
         .io .tile .type {
             border-bottom: 1px solid #dbdbdb;
             color: #607d8b;
-            font-weight: 500;
             font-size: 20px;
+            font-weight: 500;
             padding: 0.7em;
 
             -webkit-flex: 0 0 auto;
@@ -108,8 +108,8 @@
 
                 -webkit-flex: 1 0 auto;
                 flex: 1 0 auto;
-                width: 100%;
                 height: 0;
+                width: 100%;
             }
             /* Remove side-by-side padding special-case. */
             .io .tile#io1 { margin-right: 0; }
@@ -138,13 +138,12 @@
             converter(from.innerText, success, error);
         }
 
-        var textToBase64 = true;
         window.onload = function() {
             io1Text.addEventListener('input', function() {
-                updateConversion(io1Text, io2Text, textToBase64);
+                updateConversion(io1Text, io2Text, true);
             });
             io2Text.addEventListener('input', function() {
-                updateConversion(io2Text, io1Text, !textToBase64);
+                updateConversion(io2Text, io1Text, false);
             });
         }
     </script>
