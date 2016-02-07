@@ -1,4 +1,4 @@
-// UTF-8 base64 encoding and decoding.
+// Base64 encoding and decoding.
 //
 // Requires:
 //   include/buffer/buffer.js
