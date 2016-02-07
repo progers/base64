@@ -134,38 +134,115 @@
             .io .tile#io1 { margin-right: 0; }
             .io .tile#io2 { margin-left: 0; }
         }
+
+        /* Custom select box to workaround multiple cross-browser issues. */
+        /* The basic approach is to stack an invsibile select above custom text and a dropdown icon. */
+        .customSelect {
+            border-bottom: 1px solid #dbdbdb;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .customSelect svg {
+            display: inline-block;
+            height: 1em;
+            vertical-align: text-bottom;
+            width: 1em;
+        }
+        .customSelect select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            box-shadow: none;
+            font: inherit;
+            /* Position at +/- 10% to increase hit-testable area. */
+            height: 120%;
+            left: -10%;
+            margin: 0;
+            opacity: 0;
+            padding: 0;
+            position: absolute;
+            top: -10%;
+            width: 120%;
+        }
+        .customSelect select:focus {
+            outline: none;
+        }
     </style>
     <script src="include/buffer/buffer.js"></script>
     <script src="base64.js"></script>
     <script>
-        function updateConversion(from, to, textToBase64) {
-            var success = function(value) {
-                to.value = value;
-                from.classList.remove('errorSource');
-                to.classList.remove('errorSource');
-                from.classList.remove('errorDestination');
-                to.classList.remove('errorDestination');
-            }
-            var error = function(message) {
-                from.classList.add('errorSource');
-                to.classList.remove('errorSource');
-                from.classList.remove('errorDestination');
-                to.classList.add('errorDestination');
-                to.value = message;
-            }
-            var converter = textToBase64 ? asyncToBase64 : asyncFromBase64;
-            converter(from.value, success, error);
+        // Must keep in sync with customSelect HTML.
+        var ConversionTypes = {
+            'text': {displayName: 'Text', encoding: 'utf8'},
+            'ascii': {displayName: 'Text (ascii)', encoding: 'ascii'},
+            'ucs2': {displayName: 'Text (ucs-2)', encoding: 'ucs2'},
+            'utf8': {displayName: 'Text (utf-8)', encoding: 'utf8'}
         }
+        var currentConversionType = ConversionTypes['text'];
+
+        // This state variable lets us change the conversion type without overwriting the user's
+        // last input.
+        var userLastChangedBase64 = false;
 
         window.onload = function() {
             var io1Textarea = document.getElementById('io1Textarea');
             var io2Textarea = document.getElementById('io2Textarea');
             io1Textarea.addEventListener('input', function() {
-                updateConversion(io1Textarea, io2Textarea, true);
+                userLastChangedBase64 = false;
+                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
             });
             io2Textarea.addEventListener('input', function() {
-                updateConversion(io2Textarea, io1Textarea, false);
+                userLastChangedBase64 = true;
+                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
             });
+
+            // Custom select box to workaround multiple cross-browser issues.
+            var io1TypeSelector = document.getElementById('io1Type').querySelector('select');
+            var io1TypeText = document.getElementById('io1Type').querySelector('span');
+            io1TypeSelector.addEventListener('change', function() {
+                var selectedIndex = io1TypeSelector.selectedIndex;
+                var selectedValue = io1TypeSelector.options[selectedIndex].value;
+                var newType = ConversionTypes[selectedValue];
+                if (newType === undefined) {
+                    console.log('Unknown conversion type: ' + selectedValue);
+                    newType = ConversionTypes['text'];
+                }
+
+                if (newType === currentConversionType)
+                    return;
+                currentConversionType = newType;
+                io1TypeText.innerText = newType.displayName;
+                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
+            });
+        }
+
+        function updateConversion(io1, io2, conversionType, userLastChangedBase64) {
+            var inputElement = userLastChangedBase64 ? io2 : io1;
+            var outputElement = userLastChangedBase64 ? io1 : io2;
+
+            var success = function(value) {
+                outputElement.value = value;
+                inputElement.classList.remove('errorSource');
+                outputElement.classList.remove('errorSource');
+                inputElement.classList.remove('errorDestination');
+                outputElement.classList.remove('errorDestination');
+            }
+            var error = function(message) {
+                inputElement.classList.add('errorSource');
+                outputElement.classList.remove('errorSource');
+                inputElement.classList.remove('errorDestination');
+                outputElement.classList.add('errorDestination');
+                outputElement.value = message;
+            }
+            var converter = userLastChangedBase64 ? asyncFromBase64 : asyncToBase64;
+            converter(inputElement.value, conversionType.encoding, success, error);
         }
     </script>
 </head>
@@ -175,7 +252,20 @@
     </div>
     <div class="io">
         <div id="io1" class="tile">
-            <div id="io1Type" class="type">Text</div>
+            <div id="io1Type" class="type">
+                <!-- Custom select box to workaround multiple cross-browser issues. -->
+                <div class="customSelect">
+                    <select>
+                        <!-- Must keep in sync with ConversionTypes array. -->
+                        <option value="text" selected="true">Text (default)</option>
+                        <option value="ascii">Text (ascii)</option>
+                        <option value="ucs2">Text (ucs-2)</option>
+                        <option value="utf8">Text (utf-8)</option>
+                    </select>
+                    <span>Text</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300"><path fill="#607d8b" d="M0 0L100 0L50 80Z"/></svg>
+                </div>
+            </div>
             <div id="io1Content" class="content">
                 <textarea id="io1Textarea" class="textarea" spellcheck="false">Hello world</textarea>
             </div>
