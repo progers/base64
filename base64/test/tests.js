@@ -172,9 +172,9 @@ QUnit.test('control character encoding', function( assert ) {
     );
 });
 
-QUnit.test('encodings', function( assert ) {
-    assert.expect(4);
-    var done = assert.async(4);
+QUnit.test('encoding and decodign in different encodings', function( assert ) {
+    assert.expect(10);
+    var done = assert.async(10);
 
     asyncToBase64(
         '你好我是菲利普',
@@ -196,6 +196,38 @@ QUnit.test('encodings', function( assert ) {
         function failure(error) { assert.ok(false, error); }
     );
 
+    asyncToBase64(
+        '好',
+        'utf8',
+        function success(result) {
+            assert.equal(result, '5aW9', 'Hao from utf8');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncToBase64(
+        '好',
+        'ucs2',
+        function success(result) {
+            assert.equal(result, 'fVk=', 'Hao from ucs2');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    // This is fairly meaningless because 好 is not in ascii. This test varifies something sensible
+    // is returned. Pw== would also be a reasonable result.
+    asyncToBase64(
+        '好',
+        'ascii',
+        function success(result) {
+            assert.equal(result, 'fQ==', 'Hao from ascii doesn\'t explode');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
     asyncFromBase64(
         '5L2g5aW95oiR5piv6I+y5Yip5pmu',
         'utf8',
@@ -211,6 +243,38 @@ QUnit.test('encodings', function( assert ) {
         'ucs2',
         function success(result) {
             assert.equal(result, '你好我是菲利普', 'Chinese from ucs2');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncFromBase64(
+        '5aW9',
+        'utf8',
+        function success(result) {
+            assert.equal(result, '好', 'Hao from utf8');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncFromBase64(
+        'fVk=',
+        'ucs2',
+        function success(result) {
+            assert.equal(result, '好', 'Hao from ucs2');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    // This is fairly meaningless because 好 is not in ascii. This test varifies something sensible
+    // is returned from the base64 we generated for 好 above.
+    asyncFromBase64(
+        'fQ==',
+        'utf8',
+        function success(result) {
+            assert.equal(result, '}', 'Hao from ascii doesn\'t explode');
             done();
         },
         function failure(error) { assert.ok(false, error); }
