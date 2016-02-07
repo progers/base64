@@ -218,7 +218,7 @@
                 if (newType === currentConversionType)
                     return;
                 currentConversionType = newType;
-                io1TypeText.innerText = newType.displayName;
+                io1TypeText.textContent = newType.displayName;
                 updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
             });
         }
