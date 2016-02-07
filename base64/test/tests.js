@@ -114,8 +114,8 @@ QUnit.test('Simple base64 encoding', function( assert ) {
 });
 
 QUnit.test('control character encoding', function( assert ) {
-    assert.expect(2);
-    var done = assert.async(2);
+    assert.expect(5);
+    var done = assert.async(5);
 
     asyncToBase64(
         '\t\t\t\t\t',
@@ -127,12 +127,45 @@ QUnit.test('control character encoding', function( assert ) {
         function failure(error) { assert.ok(false, error); }
     );
 
-    // FIXME: This may not be correct, other encoders return YQ0KDQoNCg0KDQph.
+    // Ensure newlines are not converted to crlf (which would return YQ0KDQoNCg0KDQph).
     asyncToBase64(
         'a\n\n\n\n\na',
         'utf8',
         function success(result) {
             assert.equal(result, 'YQoKCgoKYQ==', 'Five newlines surrounded by a\'s');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    // Ensure a single newline is not converted to crlf (which would return YQ0KYQ==).
+    asyncToBase64(
+        'a\na',
+        'utf8',
+        function success(result) {
+            assert.equal(result, 'YQph', 'One newline surrounded by a\'s');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    // Ensure a newline by itself can be encoded.
+    // In addition to crlf conversions, some online encoders have trouble with a single newline.
+    asyncToBase64(
+        '\n',
+        'utf8',
+        function success(result) {
+            assert.equal(result, 'Cg==', 'One lonely newline');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncToBase64(
+        '\r',
+        'utf8',
+        function success(result) {
+            assert.equal(result, 'DQ==', 'One lonely linefeed');
             done();
         },
         function failure(error) { assert.ok(false, error); }
@@ -369,8 +402,8 @@ QUnit.test('Simple base64 decoding', function( assert ) {
 });
 
 QUnit.test('control character decoding', function( assert ) {
-    assert.expect(2);
-    var done = assert.async(2);
+    assert.expect(5);
+    var done = assert.async(5);
 
     asyncFromBase64(
         'CQkJCQk=',
@@ -382,11 +415,43 @@ QUnit.test('control character decoding', function( assert ) {
         function failure(error) { assert.ok(false, error); }
     );
 
+    // Ensure there is no conversion that changes line endings.
     asyncFromBase64(
         'YQoKCgoKYQ==',
         'utf8',
         function success(result) {
             assert.equal(result, 'a\n\n\n\n\na', 'Five newlines surrounded by a\'s');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    // Ensure crlf is not stripped.
+    asyncFromBase64(
+        'YQ0KDQoNCg0KDQph',
+        'utf8',
+        function success(result) {
+            assert.equal(result, 'a\r\n\r\n\r\n\r\n\r\na', 'Five crlf\'s surrounded by a\'s');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncFromBase64(
+        'Cg==',
+        'utf8',
+        function success(result) {
+            assert.equal(result, '\n', 'One lonely newline');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+
+    asyncFromBase64(
+        'DQ==',
+        'utf8',
+        function success(result) {
+            assert.equal(result, '\r', 'One lonely linefeed');
             done();
         },
         function failure(error) { assert.ok(false, error); }
