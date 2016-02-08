@@ -238,10 +238,10 @@
 
         // Must keep in sync with the #right type's customSelect DOM.
         var RightConversionTypes = {
-            'base64utf8': {displayName: 'Base64', encoding: 'utf8', isImage: false},
-            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2', isImage: false},
-            'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', isImage: false},
-            'base64image': {displayName: 'Base64 (image url)', encoding: 'utf8', isImage: true}
+            'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
+            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2', forImage: false},
+            'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
+            'base64image': {displayName: 'Base64 (image url)', encoding: 'utf8', forImage: true}
         }
         var rightConversionType = Object.keys(RightConversionTypes)[0];
 
@@ -387,7 +387,7 @@
                 throw 'Unknown conversion type: ' + selectedValue;
             rightConversionType = newType;
             right.querySelector('.type span').textContent = rightConversionType.displayName;
-            right.querySelector('textarea').disabled = rightConversionType.isImage;
+            right.querySelector('textarea').disabled = rightConversionType.forImage;
             if (!skipConversionUpdate)
                 updateConversion();
         }
@@ -402,7 +402,7 @@
                 var rightType = RightConversionTypes[option.value];
                 if (rightType === undefined)
                     throw 'Unknown conversion type: ' + selectedValue;
-                var enabled = leftConversionType.isImage === rightType.isImage;
+                var enabled = leftConversionType.isImage === rightType.forImage;
                 option.disabled = !enabled;
                 if (!firstEnabledIndex && !firstEnabledType && enabled) {
                     firstEnabledIndex = optionIndex;
@@ -410,7 +410,7 @@
                 }
             }
 
-            if (leftConversionType.isImage != rightConversionType.isImage) {
+            if (leftConversionType.isImage != rightConversionType.forImage) {
                 rightTypeSelector.selectedIndex = firstEnabledIndex;
                 onRightTypeChanged(true);
             }
