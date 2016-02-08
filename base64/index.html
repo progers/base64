@@ -377,6 +377,8 @@
             rightConversionType = newType;
             right.querySelector('.type span').textContent = rightConversionType.displayName;
             right.querySelector('textarea').disabled = rightConversionType.forImage;
+            if (rightConversionType.forImage)
+                userLastChangedRightSide = false;
             if (!skipConversionUpdate)
                 updateConversion();
         }
