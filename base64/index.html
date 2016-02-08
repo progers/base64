@@ -402,7 +402,7 @@
                     </select>
                     <span>Text</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
-                        <path d="M0 0L100 0L50 80Z"/>
+                        <path d="M0 0L100 0L50 80Z" />
                     </svg>
                 </div>
             </div>
@@ -414,14 +414,13 @@
                         <!-- Custom upload button to workaround multiple cross-browser issues. -->
                         <div class="customUpload">
                             <input type="file" accept="image/*">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <defs>
-                                    <path d="M24 24H0V0h24v24z" id="a"/>
+                                    <clipPath id="clipPath">
+                                        <path d="M24 24H0V0h24v24z" />
+                                    </clipPath>
                                 </defs>
-                                <clipPath id="b">
-                                    <use overflow="visible" xlink:href="#a"/>
-                                </clipPath>
-                                <path clip-path="url(#b)" d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z"/>
+                                <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z" clip-path="url(#clipPath)" />
                             </svg>
                         </div>
                     </div>
@@ -440,7 +439,7 @@
                     </select>
                     <span>Base64</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
-                        <path d="M0 0L100 0L50 80Z"/>
+                        <path d="M0 0L100 0L50 80Z" />
                     </svg>
                 </div>
             </div>
