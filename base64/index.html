@@ -178,31 +178,37 @@
     <script src="include/buffer/buffer.js"></script>
     <script src="base64.js"></script>
     <script>
-        // Must keep in sync with customSelect HTML.
+        // Must keep in sync with io1Type's customSelect DOM.
         var ConversionTypes = {
-            'text': {displayName: 'Text', encoding: 'utf8'},
-            'ascii': {displayName: 'Text (ascii)', encoding: 'ascii'},
-            'ucs2': {displayName: 'Text (ucs-2)', encoding: 'ucs2'},
-            'utf8': {displayName: 'Text (utf-8)', encoding: 'utf8'}
+            'text': {displayName: 'Text', encoding: 'utf8'}
         }
         var currentConversionType = ConversionTypes['text'];
+
+        // Must keep in sync with io2Type's customSelect DOM.
+        var Base64ConversionTypes = {
+            'base64utf8': {displayName: 'Base64', encoding: 'utf8'},
+            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2'},
+            'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii'}
+        }
+        var currentBase64ConversionType = Base64ConversionTypes['base64utf8'];
 
         // This state variable lets us change the conversion type without overwriting the user's
         // last input.
         var userLastChangedBase64 = false;
 
         window.onload = function() {
-            var io1Textarea = document.getElementById('io1Textarea');
-            var io2Textarea = document.getElementById('io2Textarea');
+            var io1Textarea = document.getElementById('io1').querySelector('textarea');
+            var io2Textarea = document.getElementById('io2').querySelector('textarea');
             io1Textarea.addEventListener('input', function() {
                 userLastChangedBase64 = false;
-                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
+                updateConversion(io1Textarea, io2Textarea, currentBase64ConversionType, userLastChangedBase64);
             });
             io2Textarea.addEventListener('input', function() {
                 userLastChangedBase64 = true;
-                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
+                updateConversion(io1Textarea, io2Textarea, currentBase64ConversionType, userLastChangedBase64);
             });
 
+            // io1 (leftmost) conversion type selector.
             // Custom select box to workaround multiple cross-browser issues.
             var io1TypeSelector = document.getElementById('io1Type').querySelector('select');
             var io1TypeText = document.getElementById('io1Type').querySelector('span');
@@ -212,14 +218,34 @@
                 var newType = ConversionTypes[selectedValue];
                 if (newType === undefined) {
                     console.log('Unknown conversion type: ' + selectedValue);
+                    // FIXME: don't hardcode this value of 'text'.
                     newType = ConversionTypes['text'];
                 }
-
                 if (newType === currentConversionType)
                     return;
                 currentConversionType = newType;
                 io1TypeText.textContent = newType.displayName;
-                updateConversion(io1Textarea, io2Textarea, currentConversionType, userLastChangedBase64);
+                updateConversion(io1Textarea, io2Textarea, currentBase64ConversionType, userLastChangedBase64);
+            });
+
+            // io2 (rightmost) conversion type selector.
+            // Custom select box to workaround multiple cross-browser issues.
+            var io2TypeSelector = document.getElementById('io2Type').querySelector('select');
+            var io2TypeText = document.getElementById('io2Type').querySelector('span');
+            io2TypeSelector.addEventListener('change', function() {
+                var selectedIndex = io2TypeSelector.selectedIndex;
+                var selectedValue = io2TypeSelector.options[selectedIndex].value;
+                var newType = Base64ConversionTypes[selectedValue];
+                if (newType === undefined) {
+                    console.log('Unknown base64 conversion type: ' + selectedValue);
+                    // FIXME: don't hardcode this value of 'base64utf8'.
+                    newType = Base64ConversionTypes['base64utf8'];
+                }
+                if (newType === currentBase64ConversionType)
+                    return;
+                currentBase64ConversionType = newType;
+                io2TypeText.textContent = newType.displayName;
+                updateConversion(io1Textarea, io2Textarea, currentBase64ConversionType, userLastChangedBase64);
             });
         }
 
@@ -257,23 +283,32 @@
                 <div class="customSelect">
                     <select>
                         <!-- Must keep in sync with ConversionTypes array. -->
-                        <option value="text" selected="true">Text (default)</option>
-                        <option value="ascii">Text (ascii)</option>
-                        <option value="ucs2">Text (ucs-2)</option>
-                        <option value="utf8">Text (utf-8)</option>
+                        <option value="text" selected="true">Text</option>
                     </select>
                     <span>Text</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300"><path fill="#607d8b" d="M0 0L100 0L50 80Z"/></svg>
                 </div>
             </div>
             <div id="io1Content" class="content">
-                <textarea id="io1Textarea" class="textarea" spellcheck="false">Hello world</textarea>
+                <textarea class="textarea" spellcheck="false">Hello world</textarea>
             </div>
         </div>
         <div id="io2" class="tile">
-            <div id="io2Type" class="type">Base64</div>
+            <div id="io2Type" class="type">
+                <!-- Custom select box to workaround multiple cross-browser issues. -->
+                <div class="customSelect">
+                    <select>
+                        <!-- Must keep in sync with Base64ConversionTypes array. -->
+                        <option value="base64utf8" selected="true">Base64 (utf8)</option>
+                        <option value="base64ascii">Base64 (ascii)</option>
+                        <option value="base64ucs2">Base64 (ucs2)</option>
+                    </select>
+                    <span>Base64</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300"><path fill="#607d8b" d="M0 0L100 0L50 80Z"/></svg>
+                </div>
+            </div>
             <div id="io2Content" class="content">
-                <textarea id="io2Textarea" class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
+                <textarea class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
             </div>
         </div>
     </div>
