@@ -253,41 +253,50 @@
         // last input.
         var userLastChangedRightSide = false;
 
-        window.onload = function() {
-            var left = document.getElementById('left');
-            var right = document.getElementById('right');
+        // Cached DOM lookups.
+        var left, leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
+        var right, rightTextarea, rightTypeSelect, rightTypeText;
 
-            left.querySelector('textarea').addEventListener('input', function() {
+        window.onload = function() {
+            left = document.getElementById('left');
+            leftImageArea = left.querySelector('.imagearea');
+            leftTextarea = left.querySelector('textarea');
+            leftImageInput = left.querySelector('.dragndrop input');
+            leftTypeSelect = left.querySelector('.type select');
+            leftTypeText = left.querySelector('.type span');
+
+            right = document.getElementById('right');
+            rightTextarea = right.querySelector('textarea');
+            rightTypeSelect = right.querySelector('.type select');
+            rightTypeText = right.querySelector('.type span');
+
+            leftTextarea.addEventListener('input', function() {
                 userLastChangedRightSide = false;
                 updateConversion();
             });
 
-            left.querySelector('.dragndrop input').addEventListener('change', function(event) {
+            leftImageInput.addEventListener('change', function(event) {
                 if (event.target.files[0]) {
                     userLastChangedRightSide = false;
                     updateConversion();
                 }
             });
 
-            right.querySelector('textarea').addEventListener('input', function() {
+            rightTextarea.addEventListener('input', function() {
                 userLastChangedRightSide = true;
                 updateConversion();
             });
 
-            left.querySelector('.type select').addEventListener('change', function() {
+            leftTypeSelect.addEventListener('change', function() {
                 onLeftTypeChanged();
             });
 
-            right.querySelector('.type select').addEventListener('change', function() {
+            rightTypeSelect.addEventListener('change', function() {
                 onRightTypeChanged();
             });
         }
 
         function updateConversion() {
-            var leftImageArea = document.getElementById('left').querySelector('.imagearea');
-            var leftTextarea = document.getElementById('left').querySelector('textarea');
-            var rightTextarea = document.getElementById('right').querySelector('textarea');
-
             // Cleanup any leftover errors.
             leftImageArea.classList.remove('errorSource');
             leftTextarea.classList.remove('errorSource');
@@ -296,7 +305,7 @@
             rightTextarea.classList.remove('errorDestination');
 
             if (leftConversionType.isImage) { // Image conversion
-                var file = document.getElementById('left').querySelector('.dragndrop input').files[0];
+                var file = leftImageInput.files[0];
                 var success = function(value) {
                     rightTextarea.value = '<img src="data:' + file.type + ';base64,' + value + '">';
                 }
@@ -341,23 +350,19 @@
         }
 
         function onLeftTypeChanged() {
-            var left = document.getElementById('left');
-            var leftTypeSelector = left.querySelector('.type select');
-            var selectedValue = leftTypeSelector.options[leftTypeSelector.selectedIndex].value;
-
+            var selectedValue = leftTypeSelect.options[leftTypeSelect.selectedIndex].value;
             var newType = LeftConversionTypes[selectedValue];
             if (newType === leftConversionType)
                 return;
             if (newType === undefined)
                 throw 'Unknown conversion type: ' + selectedValue;
             leftConversionType = newType;
-            left.querySelector('.type span').textContent = leftConversionType.displayName;
+            leftTypeText.textContent = leftConversionType.displayName;
 
             // Ensure the correct (image / text) left view is visible.
-            var leftImageArea = left.querySelector('.imagearea');
             if (leftConversionType.isImage == leftImageArea.classList.contains('hidden')) {
                 leftImageArea.classList.toggle('hidden');
-                left.querySelector('textarea').classList.toggle('hidden');
+                leftTextarea.classList.toggle('hidden');
             }
 
             updateRightTypeAfterLeftTypeChange();
@@ -365,18 +370,15 @@
         }
 
         function onRightTypeChanged(skipConversionUpdate) {
-            var right = document.getElementById('right');
-            var rightTypeSelector = right.querySelector('.type select');
-            var selectedValue = rightTypeSelector.options[rightTypeSelector.selectedIndex].value;
-
+            var selectedValue = rightTypeSelect.options[rightTypeSelect.selectedIndex].value;
             var newType = RightConversionTypes[selectedValue];
             if (newType === rightConversionType)
                 return;
             if (newType === undefined)
                 throw 'Unknown conversion type: ' + selectedValue;
             rightConversionType = newType;
-            right.querySelector('.type span').textContent = rightConversionType.displayName;
-            right.querySelector('textarea').disabled = rightConversionType.forImage;
+            rightTypeText.textContent = rightConversionType.displayName;
+            rightTextarea.disabled = rightConversionType.forImage;
             if (rightConversionType.forImage)
                 userLastChangedRightSide = false;
             if (!skipConversionUpdate)
@@ -384,12 +386,9 @@
         }
 
         function updateRightTypeAfterLeftTypeChange() {
-            var right = document.getElementById('right');
-            var rightTypeSelector = right.querySelector('.type select');
-            var firstEnabledIndex;
-            var firstEnabledType;
-            for (var optionIndex = 0; optionIndex < rightTypeSelector.options.length; optionIndex++) {
-                var option = rightTypeSelector.options[optionIndex];
+            var firstEnabledIndex, firstEnabledType;
+            for (var optionIndex = 0; optionIndex < rightTypeSelect.options.length; optionIndex++) {
+                var option = rightTypeSelect.options[optionIndex];
                 var rightType = RightConversionTypes[option.value];
                 if (rightType === undefined)
                     throw 'Unknown conversion type: ' + selectedValue;
@@ -400,9 +399,8 @@
                     firstEnabledType = rightType;
                 }
             }
-
             if (leftConversionType.isImage != rightConversionType.forImage) {
-                rightTypeSelector.selectedIndex = firstEnabledIndex;
+                rightTypeSelect.selectedIndex = firstEnabledIndex;
                 onRightTypeChanged(true);
             }
         }
