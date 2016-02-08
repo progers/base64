@@ -304,49 +304,58 @@
             leftTextarea.classList.remove('errorDestination');
             rightTextarea.classList.remove('errorDestination');
 
-            if (leftConversionType.isImage) { // Image conversion
-                var file = leftImageInput.files[0];
-                var success = function(value) {
-                    rightTextarea.value = '<img src="data:' + file.type + ';base64,' + value + '">';
-                }
-                var error = function(message) {
-                    leftImageArea.classList.add('errorSource');
-                    rightTextarea.classList.add('errorDestination');
-                    rightTextarea.value = message;
-                }
+            if (leftConversionType.isImage)
+                convertImage();
+            else
+                bidirectionalTextConversion(!userLastChangedRightSide)
 
-                if (!file) {
-                    rightTextarea.value = 'No image';
-                    return;
-                }
-                if (file.type.indexOf('image') === -1) {
-                    error('Image type \'' + file.type + '\' was not recognized.');
-                    return;
-                }
-                var reader = new FileReader();
-                reader.onload = function(result) {
-                    // FIXME: Show a preview of the uploaded image.
-                    var imageFileAsArray = new Uint8Array(result.target.result);
-                    asyncToBase64(imageFileAsArray, undefined, success, error);
-                };
-                reader.onerror = function(result) {
-                    error(result.message);
-                };
-                reader.readAsArrayBuffer(file);
-            } else { // Text conversion
-                var inputElement = userLastChangedRightSide ? rightTextarea : leftTextarea;
-                var outputElement = userLastChangedRightSide ? leftTextarea : rightTextarea;
-                var success = function(value) {
-                    outputElement.value = value;
-                }
-                var error = function(message) {
-                    inputElement.classList.add('errorSource');
-                    outputElement.classList.add('errorDestination');
-                    outputElement.value = message;
-                }
-                var converter = userLastChangedRightSide ? asyncFromBase64 : asyncToBase64;
-                converter(inputElement.value, rightConversionType.encoding, success, error);
+        }
+
+        function convertImage() {
+            var file = leftImageInput.files[0];
+            var success = function(value) {
+                rightTextarea.value = '<img src="data:' + file.type + ';base64,' + value + '">';
             }
+            var error = function(message) {
+                leftImageArea.classList.add('errorSource');
+                rightTextarea.classList.add('errorDestination');
+                rightTextarea.value = message;
+            }
+
+            if (!file) {
+                rightTextarea.value = 'No image';
+                return;
+            }
+            if (file.type.indexOf('image') === -1) {
+                error('Image type \'' + file.type + '\' was not recognized.');
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function(result) {
+                // FIXME: Show a preview of the uploaded image.
+                var imageFileAsArray = new Uint8Array(result.target.result);
+                asyncToBase64(imageFileAsArray, undefined, success, error);
+            };
+            reader.onerror = function(result) {
+                error(result.message);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function bidirectionalTextConversion(convertLeftToRight) {
+            var inputElement = convertLeftToRight ? leftTextarea : rightTextarea;
+            var outputElement = convertLeftToRight ? rightTextarea : leftTextarea;
+            var success = function(value) {
+                outputElement.value = value;
+            }
+            var error = function(message) {
+                inputElement.classList.add('errorSource');
+                outputElement.classList.add('errorDestination');
+                outputElement.value = message;
+            }
+            var converter = convertLeftToRight ? asyncToBase64 : asyncFromBase64;
+            converter(inputElement.value, rightConversionType.encoding, success, error);
         }
 
         function onLeftTypeChanged() {
