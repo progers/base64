@@ -182,7 +182,7 @@
         var LeftConversionTypes = {
             'text': {displayName: 'Text', encoding: 'utf8'}
         }
-        var currentLeftConversionType = Object.keys(LeftConversionTypes)[0];
+        var leftConversionType = Object.keys(LeftConversionTypes)[0];
 
         // Must keep in sync with the #right type's customSelect DOM.
         var RightConversionTypes = {
@@ -190,11 +190,11 @@
             'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2'},
             'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii'}
         }
-        var currentRightConversionType = Object.keys(RightConversionTypes)[0];
+        var rightConversionType = Object.keys(RightConversionTypes)[0];
 
         // This state variable lets us change the conversion type without overwriting the user's
         // last input.
-        var userLastChangedBase64 = false;
+        var userLastChangedRightSide = false;
 
         window.onload = function() {
             var left = document.getElementById('left');
@@ -202,16 +202,15 @@
             var right = document.getElementById('right');
             var rightTextarea = right.querySelector('textarea');
             leftTextarea.addEventListener('input', function() {
-                userLastChangedBase64 = false;
-                updateConversion(leftTextarea, rightTextarea, currentRightConversionType, userLastChangedBase64);
+                userLastChangedRightSide = false;
+                updateConversion();
             });
             rightTextarea.addEventListener('input', function() {
-                userLastChangedBase64 = true;
-                updateConversion(leftTextarea, rightTextarea, currentRightConversionType, userLastChangedBase64);
+                userLastChangedRightSide = true;
+                updateConversion();
             });
 
             // Left conversion type selector.
-            // Custom select box to workaround multiple cross-browser issues.
             var leftTypeSelector = left.querySelector('.type select');
             var leftTypeText = left.querySelector('.type span');
             leftTypeSelector.addEventListener('change', function() {
@@ -221,15 +220,14 @@
                     console.log('Unknown conversion type: ' + selectedValue);
                     return;
                 }
-                if (newType === currentLeftConversionType)
+                if (newType === leftConversionType)
                     return;
-                currentLeftConversionType = newType;
+                leftConversionType = newType;
                 leftTypeText.textContent = newType.displayName;
-                updateConversion(leftTextarea, rightTextarea, currentRightConversionType, userLastChangedBase64);
+                updateConversion();
             });
 
             // Right conversion type selector.
-            // Custom select box to workaround multiple cross-browser issues.
             var rightTypeSelector = right.querySelector('.type select');
             var rightTypeText = right.querySelector('.type span');
             rightTypeSelector.addEventListener('change', function() {
@@ -239,17 +237,19 @@
                     console.log('Unknown conversion type: ' + selectedValue);
                     return;
                 }
-                if (newType === currentRightConversionType)
+                if (newType === rightConversionType)
                     return;
-                currentRightConversionType = newType;
+                rightConversionType = newType;
                 rightTypeText.textContent = newType.displayName;
-                updateConversion(leftTextarea, rightTextarea, currentRightConversionType, userLastChangedBase64);
+                updateConversion();
             });
         }
 
-        function updateConversion(leftTextarea, rightTextarea, conversionType, userLastChangedBase64) {
-            var inputElement = userLastChangedBase64 ? rightTextarea : leftTextarea;
-            var outputElement = userLastChangedBase64 ? leftTextarea : rightTextarea;
+        function updateConversion() {
+            var leftTextarea = document.getElementById('left').querySelector('textarea');
+            var rightTextarea = document.getElementById('right').querySelector('textarea');
+            var inputElement = userLastChangedRightSide ? rightTextarea : leftTextarea;
+            var outputElement = userLastChangedRightSide ? leftTextarea : rightTextarea;
 
             var success = function(value) {
                 outputElement.value = value;
@@ -265,8 +265,8 @@
                 outputElement.classList.add('errorDestination');
                 outputElement.value = message;
             }
-            var converter = userLastChangedBase64 ? asyncFromBase64 : asyncToBase64;
-            converter(inputElement.value, conversionType.encoding, success, error);
+            var converter = userLastChangedRightSide ? asyncFromBase64 : asyncToBase64;
+            converter(inputElement.value, rightConversionType.encoding, success, error);
         }
     </script>
 </head>
