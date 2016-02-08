@@ -178,13 +178,13 @@
     <script src="include/buffer/buffer.js"></script>
     <script src="base64.js"></script>
     <script>
-        // Must keep in sync with the left type's customSelect DOM.
+        // Must keep in sync with the #left type's customSelect DOM.
         var LeftConversionTypes = {
             'text': {displayName: 'Text', encoding: 'utf8'}
         }
         var currentLeftConversionType = Object.keys(LeftConversionTypes)[0];
 
-        // Must keep in sync with the right type's customSelect DOM.
+        // Must keep in sync with the #right type's customSelect DOM.
         var RightConversionTypes = {
             'base64utf8': {displayName: 'Base64', encoding: 'utf8'},
             'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2'},
@@ -278,13 +278,15 @@
         <div id="left" class="tile">
             <div class="type">
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
+                <!-- Must keep these values in sync with the LeftConversionTypes array. -->
                 <div class="customSelect">
                     <select>
-                        <!-- Must keep in sync with LeftConversionTypes array. -->
                         <option value="text" selected="true">Text</option>
                     </select>
                     <span>Text</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300"><path fill="#607d8b" d="M0 0L100 0L50 80Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
+                        <path fill="#607d8b" d="M0 0L100 0L50 80Z"/>
+                    </svg>
                 </div>
             </div>
             <div class="content">
@@ -294,15 +296,17 @@
         <div id="right" class="tile">
             <div class="type">
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
+                <!-- Must keep these values in sync with the RightConversionTypes array. -->
                 <div class="customSelect">
                     <select>
-                        <!-- Must keep in sync with RightConversionTypes array. -->
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
                         <option value="base64ucs2">Base64 (ucs2)</option>
                     </select>
                     <span>Base64</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300"><path fill="#607d8b" d="M0 0L100 0L50 80Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
+                        <path fill="#607d8b" d="M0 0L100 0L50 80Z"/>
+                    </svg>
                 </div>
             </div>
             <div class="content">
