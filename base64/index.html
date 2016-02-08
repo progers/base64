@@ -416,7 +416,7 @@
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
                 <!-- Must keep these values in sync with the LeftConversionTypes array. -->
                 <div class="customSelect">
-                    <select>
+                    <select autocomplete="off">
                         <option value="text" selected="true">Text</option>
                         <option value="image">Image</option>
                     </select>
@@ -427,13 +427,13 @@
                 </div>
             </div>
             <div class="content">
-                <textarea class="textarea" spellcheck="false">Hello world</textarea>
+                <textarea class="textarea" spellcheck="false" autocomplete="off">Hello world</textarea>
                 <div class="imagearea hidden">
                     <!-- FIXME: Support drag and drop. -->
                     <div class="dragndrop">
                         <!-- Custom upload button to workaround multiple cross-browser issues. -->
                         <div class="customUpload">
-                            <input type="file" accept="image/*">
+                            <input type="file" accept="image/*" autocomplete="off">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <defs>
                                     <clipPath id="clipPath">
@@ -452,7 +452,7 @@
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
                 <!-- Must keep these values in sync with the RightConversionTypes array. -->
                 <div class="customSelect">
-                    <select>
+                    <select autocomplete="off">
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
                         <option value="base64ucs2">Base64 (ucs2)</option>
@@ -465,7 +465,7 @@
                 </div>
             </div>
             <div class="content">
-                <textarea class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
+                <textarea class="textarea" spellcheck="false" autocomplete="off">SGVsbG8gd29ybGQ=</textarea>
             </div>
         </div>
     </div>
