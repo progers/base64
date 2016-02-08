@@ -238,9 +238,10 @@
 
         // Must keep in sync with the #right type's customSelect DOM.
         var RightConversionTypes = {
-            'base64utf8': {displayName: 'Base64', encoding: 'utf8'},
-            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2'},
-            'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii'}
+            'base64utf8': {displayName: 'Base64', encoding: 'utf8', isImage: false},
+            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2', isImage: false},
+            'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', isImage: false},
+            'base64image': {displayName: 'Base64 (image url)', encoding: 'utf8', isImage: true}
         }
         var rightConversionType = Object.keys(RightConversionTypes)[0];
 
@@ -248,65 +249,20 @@
         // last input.
         var userLastChangedRightSide = false;
 
-        // FIXME: Optimize the clearing of these to reduce peak memory usage.
-        var imageFile;
+        // FIXME: Optimize the clearing of this to reduce peak memory usage.
         var imageFileAsBase64Cache;
 
         window.onload = function() {
             var left = document.getElementById('left');
-            var leftTextarea = left.querySelector('textarea');
             var right = document.getElementById('right');
-            var rightTextarea = right.querySelector('textarea');
-            leftTextarea.addEventListener('input', function() {
+
+            left.querySelector('textarea').addEventListener('input', function() {
                 userLastChangedRightSide = false;
                 updateConversion();
             });
-            rightTextarea.addEventListener('input', function() {
-                userLastChangedRightSide = true;
-                updateConversion();
-            });
 
-            // Left conversion type selector.
-            // FIXME: The image type should change the available right conversion types.
-            var leftTypeSelector = left.querySelector('.type select');
-            var leftTypeText = left.querySelector('.type span');
-            leftTypeSelector.addEventListener('change', function() {
-                var selectedValue = leftTypeSelector.options[leftTypeSelector.selectedIndex].value;
-                var newType = LeftConversionTypes[selectedValue];
-                if (newType === undefined) {
-                    console.log('Unknown conversion type: ' + selectedValue);
-                    return;
-                }
-                if (newType === leftConversionType)
-                    return;
-                leftConversionType = newType;
-                leftTypeText.textContent = newType.displayName;
-                updateConversion();
-            });
-
-            // Right conversion type selector.
-            var rightTypeSelector = right.querySelector('.type select');
-            var rightTypeText = right.querySelector('.type span');
-            rightTypeSelector.addEventListener('change', function() {
-                var selectedValue = rightTypeSelector.options[rightTypeSelector.selectedIndex].value;
-                var newType = RightConversionTypes[selectedValue];
-                if (newType === undefined) {
-                    console.log('Unknown conversion type: ' + selectedValue);
-                    return;
-                }
-                if (newType === rightConversionType)
-                    return;
-                rightConversionType = newType;
-                rightTypeText.textContent = newType.displayName;
-                updateConversion();
-            });
-
-            // Image upload handling (left).
-            var uploadFormControl = left.querySelector('.dragndrop input');
-            uploadFormControl.addEventListener('change', function(event) {
-                var file = event.target.files[0];
-                if (file) {
-                    imageFile = file;
+            left.querySelector('.dragndrop input').addEventListener('change', function(event) {
+                if (event.target.files[0]) {
                     // Force this to be recomputed.
                     imageFileAsBase64Cache = undefined;
                     userLastChangedRightSide = false;
@@ -314,11 +270,24 @@
                 }
             });
 
+            right.querySelector('textarea').addEventListener('input', function() {
+                userLastChangedRightSide = true;
+                updateConversion();
+            });
+
+            left.querySelector('.type select').addEventListener('change', function() {
+                onLeftTypeChanged();
+            });
+
+            right.querySelector('.type select').addEventListener('change', function() {
+                onRightTypeChanged();
+            });
+
             // TESTING ONLY
-            // leftTypeSelector.value = 'image';
+            // left.querySelector('.type select').value = 'image';
             // var evt = document.createEvent("HTMLEvents");
             // evt.initEvent("change", false, true);
-            // leftTypeSelector.dispatchEvent(evt);
+            // left.querySelector('.type select').dispatchEvent(evt);
         }
 
         function updateConversion() {
@@ -332,12 +301,6 @@
             rightTextarea.classList.remove('errorSource');
             leftTextarea.classList.remove('errorDestination');
             rightTextarea.classList.remove('errorDestination');
-
-            // Ensure the correct (image / text) left view is visible.
-            if (leftConversionType.isImage == leftImageArea.classList.contains('hidden')) {
-                leftImageArea.classList.toggle('hidden');
-                leftTextarea.classList.toggle('hidden');
-            }
 
             if (leftConversionType.isImage) { // Image conversion
                 var success = function(value) {
@@ -353,9 +316,12 @@
                 }
                 if (imageFileAsBase64Cache) {
                     success(imageFileAsBase64Cache);
-                } else if (imageFile) {
-                    if (imageFile.type.indexOf('image') === -1) {
-                        error('Image type \'' + imageFile.type + '\' was not recognized.');
+                } else {
+                    var fileInput = document.getElementById('left').querySelector('.dragndrop input');
+                    if (!fileInput.files[0])
+                        return;
+                    if (fileInput.files[0].type.indexOf('image') === -1) {
+                        error('Image type \'' + fileInput.files[0].type + '\' was not recognized.');
                         return;
                     }
                     var reader = new FileReader();
@@ -367,7 +333,7 @@
                     reader.onerror = function(result) {
                         error(result.message);
                     };
-                    reader.readAsArrayBuffer(imageFile);
+                    reader.readAsArrayBuffer(fileInput.files[0]);
                 }
             } else { // Text conversion
                 var inputElement = userLastChangedRightSide ? rightTextarea : leftTextarea;
@@ -382,6 +348,71 @@
                 }
                 var converter = userLastChangedRightSide ? asyncFromBase64 : asyncToBase64;
                 converter(inputElement.value, rightConversionType.encoding, success, error);
+            }
+        }
+
+        function onLeftTypeChanged() {
+            var left = document.getElementById('left');
+            var leftTypeSelector = left.querySelector('.type select');
+            var selectedValue = leftTypeSelector.options[leftTypeSelector.selectedIndex].value;
+
+            var newType = LeftConversionTypes[selectedValue];
+            if (newType === leftConversionType)
+                return;
+            if (newType === undefined)
+                throw 'Unknown conversion type: ' + selectedValue;
+            leftConversionType = newType;
+            left.querySelector('.type span').textContent = leftConversionType.displayName;
+            updateRightTypeAfterLeftTypeChange();
+
+            // Ensure the correct (image / text) left view is visible.
+            var leftImageArea = left.querySelector('.imagearea');
+            if (leftConversionType.isImage == leftImageArea.classList.contains('hidden')) {
+                leftImageArea.classList.toggle('hidden');
+                left.querySelector('textarea').classList.toggle('hidden');
+            }
+
+            updateConversion();
+        }
+
+        function onRightTypeChanged(skipConversionUpdate) {
+            var right = document.getElementById('right');
+            var rightTypeSelector = right.querySelector('.type select');
+            var selectedValue = rightTypeSelector.options[rightTypeSelector.selectedIndex].value;
+
+            var newType = RightConversionTypes[selectedValue];
+            if (newType === rightConversionType)
+                return;
+            if (newType === undefined)
+                throw 'Unknown conversion type: ' + selectedValue;
+            rightConversionType = newType;
+            right.querySelector('.type span').textContent = rightConversionType.displayName;
+            right.querySelector('textarea').disabled = rightConversionType.isImage;
+            if (!skipConversionUpdate)
+                updateConversion();
+        }
+
+        function updateRightTypeAfterLeftTypeChange() {
+            var right = document.getElementById('right');
+            var rightTypeSelector = right.querySelector('.type select');
+            var firstEnabledIndex;
+            var firstEnabledType;
+            for (var optionIndex = 0; optionIndex < rightTypeSelector.options.length; optionIndex++) {
+                var option = rightTypeSelector.options[optionIndex];
+                var rightType = RightConversionTypes[option.value];
+                if (rightType === undefined)
+                    throw 'Unknown conversion type: ' + selectedValue;
+                var enabled = leftConversionType.isImage === rightType.isImage;
+                option.disabled = !enabled;
+                if (!firstEnabledIndex && !firstEnabledType && enabled) {
+                    firstEnabledIndex = optionIndex;
+                    firstEnabledType = rightType;
+                }
+            }
+
+            if (leftConversionType.isImage != rightConversionType.isImage) {
+                rightTypeSelector.selectedIndex = firstEnabledIndex;
+                onRightTypeChanged(true);
             }
         }
     </script>
@@ -436,6 +467,7 @@
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
                         <option value="base64ucs2">Base64 (ucs2)</option>
+                        <option value="base64image" disabled="true">Base64 (image url)</option>
                     </select>
                     <span>Base64</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
