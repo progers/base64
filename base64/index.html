@@ -182,7 +182,7 @@
         var LeftConversionTypes = {
             'text': {displayName: 'Text', encoding: 'utf8'}
         }
-        var currentLeftConversionType = LeftConversionTypes['text'];
+        var currentLeftConversionType = Object.keys(LeftConversionTypes)[0];
 
         // Must keep in sync with the right type's customSelect DOM.
         var RightConversionTypes = {
@@ -190,7 +190,7 @@
             'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2'},
             'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii'}
         }
-        var currentRightConversionType = RightConversionTypes['base64utf8'];
+        var currentRightConversionType = Object.keys(RightConversionTypes)[0];
 
         // This state variable lets us change the conversion type without overwriting the user's
         // last input.
@@ -219,8 +219,7 @@
                 var newType = LeftConversionTypes[selectedValue];
                 if (newType === undefined) {
                     console.log('Unknown conversion type: ' + selectedValue);
-                    // FIXME: don't hardcode this value of 'text'.
-                    newType = LeftConversionTypes['text'];
+                    return;
                 }
                 if (newType === currentLeftConversionType)
                     return;
@@ -237,9 +236,8 @@
                 var selectedValue = rightTypeSelector.options[rightTypeSelector.selectedIndex].value;
                 var newType = RightConversionTypes[selectedValue];
                 if (newType === undefined) {
-                    console.log('Unknown base64 conversion type: ' + selectedValue);
-                    // FIXME: don't hardcode this value of 'base64utf8'.
-                    newType = RightConversionTypes['base64utf8'];
+                    console.log('Unknown conversion type: ' + selectedValue);
+                    return;
                 }
                 if (newType === currentRightConversionType)
                     return;
