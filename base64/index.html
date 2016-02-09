@@ -134,7 +134,7 @@
         }
         /* Custom upload button to workaround multiple cross-browser issues. */
         /* The basic approach is to hide an upload control on top of a button image. */
-        .io .tile .content .imagearea .dragndrop .customUpload {
+        .io .tile .content .imagearea .customUpload {
             bottom: 0;
             height: 60px;
             left: 0;
@@ -146,24 +146,24 @@
             width: 60px;
         }
         /* When an image is present, move button to the top-left. */
-        .io .tile .content .imagearea.containsImage .dragndrop .customUpload {
+        .io .tile .content .imagearea.containsImage .customUpload {
             position: relative;
             margin: 0;
         }
-        .io .tile .content .imagearea .dragndrop .customUpload svg {
+        .io .tile .content .imagearea .customUpload svg {
             width: 100%;
             height: 100%;
             /* drop-shadow does not support the exact syntax from blur so this has been adjusted. */
             -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
             filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
         }
-        .io .tile .content .imagearea .dragndrop .customUpload svg path {
+        .io .tile .content .imagearea .customUpload svg path {
             fill: #0091ea;
         }
-        .io .tile .content .imagearea .dragndrop .customUpload:hover svg path {
+        .io .tile .content .imagearea .customUpload:hover svg path {
             fill: #00b0ff;
         }
-        .io .tile .content .imagearea .dragndrop input {
+        .io .tile .content .imagearea .customUpload input {
             cursor: pointer;
             height: 200%;
             left: 0;
