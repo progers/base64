@@ -22,7 +22,7 @@
             flex-direction: column;
         }
         .header {
-            background: #607d8b;
+            background: #3f51b5;
             box-shadow: 0 2px 5px rgba(0,0,0,0.26);
             color: #fff;
             font-size: 20px;
@@ -62,7 +62,7 @@
         .io .tile#right { margin-left: 1em; }
         .io .tile .type {
             border-bottom: 1px solid #dbdbdb;
-            color: #607d8b;
+            color: rgba(0,0,0,0.87);
             font-size: 20px;
             font-weight: 500;
             padding: 0.7em;
@@ -102,17 +102,17 @@
         }
         .io .tile .content .textarea:disabled {
             background: #fff;
-            color: rgb(84,84,84);
+            color: rgba(0,0,0,0.54);
         }
         .io .tile .content .hidden {
             display: none;
         }
         .io .tile .content .errorSource {
-            border: 1px solid #ff3d00;
-            color: #90a4ae;
+            border: 1px solid #0091ea;
+            color: rgba(0,0,0,0.38);
         }
         .io .tile .content .errorDestination {
-            color: #90a4ae;
+            color: rgba(0,0,0,0.38);
         }
         .io .tile .content .imagearea {
             background-position: center center;
@@ -128,32 +128,40 @@
             position: absolute;
             width: 100%;
         }
-        /* FIXME: Center the drag and drop control. */
         .io .tile .content .imagearea .dragndrop {
-            text-align: center;
-        }
-        .io .tile .content .imagearea.containsImage .dragndrop {
-            text-align: left;
+            width: 100%;
+            height: 100%;
         }
         /* Custom upload button to workaround multiple cross-browser issues. */
         /* The basic approach is to hide an upload control on top of a button image. */
         .io .tile .content .imagearea .dragndrop .customUpload {
-            display: inline-block;
-            height: 100px;
-            margin-top: 100px;
+            bottom: 0;
+            height: 60px;
+            left: 0;
+            margin: auto;
             overflow: hidden;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 60px;
+        }
+        /* When an image is present, move button to the top-left. */
+        .io .tile .content .imagearea.containsImage .dragndrop .customUpload {
             position: relative;
-            width: 100px;
+            margin: 0;
         }
         .io .tile .content .imagearea .dragndrop .customUpload svg {
             width: 100%;
             height: 100%;
+            /* drop-shadow does not support the exact syntax from blur so this has been adjusted. */
+            -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
         }
         .io .tile .content .imagearea .dragndrop .customUpload svg path {
-            fill: #039be5;
+            fill: #0091ea;
         }
         .io .tile .content .imagearea .dragndrop .customUpload:hover svg path {
-            fill: #01579b;
+            fill: #00b0ff;
         }
         .io .tile .content .imagearea .dragndrop input {
             cursor: pointer;
@@ -163,6 +171,8 @@
             position: absolute;
             top: -100%;
             width: 100%;
+            /* A filter on the svg will give it a stacking context, so ensure this stays on top. */
+            z-index: 99;
         }
         .ad {
             background: #03a9f4;
@@ -213,7 +223,7 @@
             width: 1em;
         }
         .customSelect svg path {
-            fill: #607d8b;
+            fill: rgba(0,0,0,0.87);
         }
         .customSelect select {
             -webkit-appearance: none;
