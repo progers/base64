@@ -78,11 +78,9 @@
             margin: 0;
             padding: 0;
             position: relative;
-
             /* Margins must equal the total padding on children to ensure scrollbars stay flush. */
             margin-bottom: 2em;
             margin-right: 2em;
-
             -webkit-flex: 1 1 auto;
             flex: 1 1 auto;
         }
@@ -107,11 +105,11 @@
         .io .tile .content .hidden {
             display: none;
         }
-        .io .tile .content .errorSource {
+        .errorSource {
             border: 1px solid #0091ea;
             color: rgba(0,0,0,0.38);
         }
-        .io .tile .content .errorDestination {
+        .errorDestination {
             color: rgba(0,0,0,0.38);
         }
         .io .tile .content .imagearea {
@@ -127,10 +125,6 @@
             padding: 1em;
             position: absolute;
             width: 100%;
-        }
-        .io .tile .content .imagearea .dragndrop {
-            width: 100%;
-            height: 100%;
         }
         /* Custom upload button to workaround multiple cross-browser issues. */
         /* The basic approach is to hide an upload control on top of a button image. */
@@ -173,6 +167,10 @@
             width: 100%;
             /* A filter on the svg will give it a stacking context, so ensure this stays on top. */
             z-index: 99;
+        }
+        /* Drag and drop styles. */
+        #left .dragover {
+            border: 1px solid #0091ea;
         }
         .ad {
             background: #03a9f4;
@@ -277,7 +275,7 @@
             left = document.getElementById('left');
             leftImageArea = left.querySelector('.imagearea');
             leftTextarea = left.querySelector('textarea');
-            leftImageInput = left.querySelector('.dragndrop input');
+            leftImageInput = left.querySelector('.customUpload input');
             leftTypeSelect = left.querySelector('.type select');
             leftTypeText = left.querySelector('.type span');
 
@@ -309,6 +307,34 @@
 
             rightTypeSelect.addEventListener('change', function() {
                 onRightTypeChanged();
+            });
+
+            // Drag and drop support.
+            var insideCount = 0;
+            var leftContent = left.querySelector('.content');
+            leftContent.addEventListener('dragenter', function(event) {
+                insideCount++;
+                leftTextarea.classList.add('dragover');
+                leftImageArea.classList.add('dragover');
+            });
+            leftContent.addEventListener('dragleave', function(event) {
+                if (--insideCount === 0) {
+                    leftTextarea.classList.remove('dragover');
+                    leftImageArea.classList.remove('dragover');
+                }
+            });
+            document.body.addEventListener('dragover', function(event) {
+                // Required for the drop event to work properly.
+                event.preventDefault();
+            });
+            document.body.addEventListener('drop', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                insideCount = 0;
+                leftTextarea.classList.remove('dragover');
+                leftImageArea.classList.remove('dragover');
+                if (event.dataTransfer.files.length > 0)
+                    onDropFiles(event.dataTransfer.files);
             });
         }
 
@@ -386,7 +412,7 @@
             converter(inputElement.value, rightConversionType.encoding, success, error);
         }
 
-        function onLeftTypeChanged() {
+        function onLeftTypeChanged(optionalSkipConversionUpdate) {
             var selectedValue = leftTypeSelect.options[leftTypeSelect.selectedIndex].value;
             var newType = LeftConversionTypes[selectedValue];
             if (newType === leftConversionType)
@@ -403,7 +429,8 @@
             }
 
             updateRightTypeAfterLeftTypeChange();
-            updateConversion();
+            if (!optionalSkipConversionUpdate)
+                updateConversion();
         }
 
         function onRightTypeChanged(optionalSkipConversionUpdate) {
@@ -441,6 +468,22 @@
                 onRightTypeChanged(true);
             }
         }
+
+        function onDropFiles(files) {
+            if (!leftConversionType.isImage) {
+                // Switch to the first image type.
+                var leftConversions = Object.keys(LeftConversionTypes);
+                for (var index = 0; index < leftConversions.length; index++) {
+                    if (LeftConversionTypes[leftConversions[index]].isImage) {
+                        leftTypeSelect.selectedIndex = index;
+                        onLeftTypeChanged(true);
+                        break;
+                    }
+                }
+            }
+            leftImageInput.files = files;
+            updateConversion();
+        }
     </script>
 </head>
 <body>
@@ -466,20 +509,17 @@
             <div class="content">
                 <textarea class="textarea" spellcheck="false" autocomplete="off">Hello world</textarea>
                 <div class="imagearea hidden">
-                    <!-- FIXME: Support drag and drop. -->
-                    <div class="dragndrop">
-                        <!-- Custom upload button to workaround multiple cross-browser issues. -->
-                        <div class="customUpload">
-                            <input type="file" accept="image/*" autocomplete="off" title="">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <defs>
-                                    <clipPath id="clipPath">
-                                        <path d="M24 24H0V0h24v24z" />
-                                    </clipPath>
-                                </defs>
-                                <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z" clip-path="url(#clipPath)" />
-                            </svg>
-                        </div>
+                    <!-- Custom upload button to workaround multiple cross-browser issues. -->
+                    <div class="customUpload">
+                        <input type="file" accept="image/*" autocomplete="off" title="">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <defs>
+                                <clipPath id="clipPath">
+                                    <path d="M24 24H0V0h24v24z" />
+                                </clipPath>
+                            </defs>
+                            <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z" clip-path="url(#clipPath)" />
+                        </svg>
                     </div>
                 </div>
             </div>
