@@ -266,6 +266,9 @@
         // last input.
         var userLastChangedRightSide = false;
 
+        // FIXME: Check if this can be cleared more often to reduce peak memory usage.
+        var currentFile;
+
         // Cached DOM lookups.
         var left, leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
         var right, rightTextarea, rightTypeSelect, rightTypeText;
@@ -290,6 +293,7 @@
 
             leftImageInput.addEventListener('change', function(event) {
                 if (event.target.files[0]) {
+                    currentFile = event.target.files[0];
                     userLastChangedRightSide = false;
                     updateConversion();
                 }
@@ -360,7 +364,6 @@
         }
 
         function convertImage() {
-            var file = leftImageInput.files[0];
             var setBackgroundImage = function(optionalDataUri) {
                 if (optionalDataUri) {
                     leftImageArea.classList.add('containsImage');
@@ -371,7 +374,7 @@
                 }
             }
             var success = function(value) {
-                var dataUri = 'data:' + file.type + ';base64,' + value;
+                var dataUri = 'data:' + currentFile.type + ';base64,' + value;
                 rightTextarea.value = '<img src="' + dataUri + '">';
                 setBackgroundImage(dataUri);
             }
@@ -382,13 +385,13 @@
                 setBackgroundImage(undefined);
             }
 
-            if (!file) {
+            if (!currentFile) {
                 rightTextarea.value = 'No image';
                 setBackgroundImage(undefined);
                 return;
             }
-            if (file.type.indexOf('image') === -1) {
-                error('Image type \'' + file.type + '\' was not recognized.');
+            if (currentFile.type.indexOf('image') === -1) {
+                error('Image type \'' + currentFile.type + '\' was not recognized.');
                 return;
             }
 
@@ -400,7 +403,7 @@
             reader.onerror = function(result) {
                 error(result.message);
             };
-            reader.readAsArrayBuffer(file);
+            reader.readAsArrayBuffer(currentFile);
         }
 
         function bidirectionalTextConversion(convertLeftToRight) {
@@ -476,6 +479,9 @@
         }
 
         function onDropFiles(files) {
+            if (files.length === 0)
+                return;
+            currentFile = files[0];
             if (!leftConversionType.isImage) {
                 // Switch to the first image type.
                 var leftConversions = Object.keys(LeftConversionTypes);
@@ -487,8 +493,6 @@
                     }
                 }
             }
-            // FIXME: This does not work in Gecko.
-            leftImageInput.files = files;
             updateConversion();
         }
     </script>
