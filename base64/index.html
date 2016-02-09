@@ -71,7 +71,6 @@
             flex: 0 0 auto;
         }
         .io .tile .content {
-            border: none;
             font-family: monospace;
             font-size: 14px;
             height: 100%;
@@ -141,15 +140,15 @@
         }
         /* When an image is present, move button to the top-left. */
         .io .tile .content .imagearea.containsImage .customUpload {
-            position: relative;
             margin: 0;
+            position: relative;
         }
         .io .tile .content .imagearea .customUpload svg {
-            width: 100%;
-            height: 100%;
-            /* drop-shadow does not support the exact syntax from blur so this has been adjusted. */
+            /* drop-shadow does not support the exact blur syntax so this has been approximated. */
             -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
             filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+            height: 100%;
+            width: 100%;
         }
         .io .tile .content .imagearea .customUpload svg path {
             fill: #0091ea;
@@ -259,7 +258,7 @@
             'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
             'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2', forImage: false},
             'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
-            'base64image': {displayName: 'Base64 (image url)', encoding: 'utf8', forImage: true}
+            'base64image': {displayName: 'Base64 (image)', encoding: 'utf8', forImage: true}
         }
         var rightConversionType = Object.keys(RightConversionTypes)[0];
 
@@ -534,7 +533,7 @@
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
                         <option value="base64ucs2">Base64 (ucs2)</option>
-                        <option value="base64image" disabled="true">Base64 (image url)</option>
+                        <option value="base64image" disabled="true">Base64 (image)</option>
                     </select>
                     <span>Base64</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
