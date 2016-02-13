@@ -166,6 +166,8 @@
             left: 0;
             opacity: 0;
             position: absolute;
+            /* Disable blue glow on Chrome for Android due to cursor: pointer. */
+            -webkit-tap-highlight-color: transparent;
             top: -100%;
             width: 100%;
             /* A filter on the svg will give it a stacking context, so ensure this stays on top. */
