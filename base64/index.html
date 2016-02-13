@@ -367,6 +367,7 @@
                 bidirectionalTextConversion(!userLastChangedRightSide)
         }
 
+        // TODO: Gracefully disable this if the FileReader/etc APIs are not available.
         function convertImage() {
             var setBackgroundImage = function(optionalDataUri) {
                 if (optionalDataUri) {
