@@ -97,7 +97,7 @@
             resize: none;
             width: 100%;
         }
-        .io .tile .content .textarea:disabled {
+        .io .tile .content .textarea[readonly],  .io .tile .content .textarea[readonly='readonly'] {
             background: #fff;
             color: rgba(0,0,0,0.54);
         }
@@ -458,7 +458,10 @@
                 throw 'Unknown conversion type: ' + selectedValue;
             rightConversionType = newType;
             rightTypeText.textContent = rightConversionType.displayName;
-            rightTextarea.disabled = rightConversionType.forImage;
+            if (rightConversionType.forImage)
+                rightTextarea.setAttribute('readonly', 'readonly');
+            else
+                rightTextarea.removeAttribute('readonly');
             if (rightConversionType.forImage)
                 userLastChangedRightSide = false;
             if (!optionalSkipConversionUpdate)
