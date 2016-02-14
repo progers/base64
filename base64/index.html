@@ -89,6 +89,8 @@
             font-size: inherit;
             height: 100%;
             margin: 0;
+            /* Workaround to improve experience on browsers without new flexbox. */
+            min-height: 3em;
             outline: none;
             overflow: auto;
             /* This padding must match the imagearea's padding. */
@@ -118,6 +120,8 @@
             font-family: inherit;
             font-size: inherit;
             height: 100%;
+            /* Workaround to improve experience on browsers without new flexbox. */
+            min-height: 3em;
             margin: 0;
             overflow: auto;
             /* This padding must match the textarea's padding. */
