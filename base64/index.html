@@ -381,7 +381,7 @@
                 }
             }
             var success = function(value) {
-                var dataUri = 'data:' + currentFile.type + ';base64,' + value;
+                var dataUri = 'data:' + imageType(currentFile) + ';base64,' + value;
                 rightTextarea.value = '<img src="' + dataUri + '">';
                 setBackgroundImage(dataUri);
             }
@@ -397,8 +397,8 @@
                 setBackgroundImage(undefined);
                 return;
             }
-            if (currentFile.type.indexOf('image') === -1) {
-                error('Image type \'' + currentFile.type + '\' was not recognized.');
+            if (imageType(currentFile).indexOf('image') === -1) {
+                error('Image type \'' + imageType(currentFile) + '\' was not recognized.');
                 return;
             }
 
@@ -504,6 +504,30 @@
                 }
             }
             updateConversion();
+        }
+
+        function imageType(file) {
+            if (file.type !== '')
+                return file.type;
+
+            // The stock browser on Android 4.3 returns an empty string for type. If the type is
+            // empty but a file was uploaded, synthesize a mimetype from the filename.
+            if (!file.name || file.name.length <= 0)
+                return '';
+            var extension = file.name.substr(file.name.lastIndexOf('.') + 1);
+            switch (extension) {
+                case('bmp'): return 'image/bmp';
+                case('gif'): return 'image/gif';
+                case('jpeg'): return 'image/jpeg';
+                case('jpg'): return 'image/jpeg';
+                case('jpe'): return 'image/jpeg';
+                case('png'): return 'image/png';
+                case('svg'): return 'image/svg+xml';
+                case('svgz'): return 'image/svg+xml';
+                case('webp'): return 'image/webp';
+                case('ico'): return 'image/x-icon';
+            }
+            return '';
         }
     </script>
 </head>
