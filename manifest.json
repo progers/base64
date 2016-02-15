@@ -16,7 +16,7 @@
       "src": "appicon72.png",
       "sizes": "72x72",
       "type": "image/png"
-    },
+    }
   ],
   "start_url": "index.html",
   "display": "standalone",
