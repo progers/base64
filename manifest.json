@@ -1,0 +1,26 @@
+{
+  "short_name": "Base64",
+  "name": "Base64 Converter",
+  "icons": [
+    {
+      "src": "appicon192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "appicon144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "appicon72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fafafa",
+  "theme_color": "#2196f3"
+}
