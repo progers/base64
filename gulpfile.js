@@ -24,7 +24,7 @@ var paths = {
     scripts: ['include/buffer/buffer.js'],
     html: ['index.html'],
     images: ['*.png'],
-    extras: ['manifest.json', 'favicon.ico'],
+    extras: ['manifest.json', 'favicon.ico', 'roboto400latin.woff2', 'roboto500latin.woff2'],
 };
 
 gulp.task('clean', function() {
