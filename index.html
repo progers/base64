@@ -268,7 +268,6 @@
         }
     </style>
     <script src="include/buffer/buffer.js"></script>
-    <script src="base64.js"></script>
     <script>
         // Must keep in sync with the #left type's customSelect DOM.
         var LeftConversionTypes = {
@@ -547,6 +546,24 @@
             }
             return '';
         }
+
+    function asyncToBase64(value, encoding, onSuccess, onError) {
+        try {
+            var result = new buffer.Buffer(value, encoding).toString('base64');
+            onSuccess(result);
+        } catch (error) {
+            onError('Failed to convert (' + error + ').');
+        }
+    }
+
+    function asyncFromBase64(value, encoding, onSuccess, onError) {
+        try {
+            var result = new buffer.Buffer(value, 'base64').toString(encoding);
+            onSuccess(result);
+        } catch (error) {
+            onError('Failed to convert (' + error + ').');
+        }
+    }
     </script>
 </head>
 <body>
