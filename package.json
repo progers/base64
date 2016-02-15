@@ -1,0 +1,17 @@
+{
+    "private": true,
+    "name": "Base64",
+    "version": "1.0.0",
+    "description": "Base64 Converter",
+    "main": "index.html",
+    "devDependencies": {
+        "del": "^2.2.0",
+        "gulp": "^3.9.1",
+        "gulp-imagemin": "^2.4.0",
+        "gulp-inline-source": "^2.1.0",
+        "imagemin-pngquant": "^4.2.0"
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    }
+}
