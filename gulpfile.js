@@ -23,7 +23,7 @@ var outDir = 'out/';
 var paths = {
     scripts: ['include/buffer/buffer.js'],
     html: ['index.html'],
-    images: ['**/*.png'],
+    images: ['images/*.png'],
     extras: ['manifest.json', 'favicon.ico'],
 };
 
@@ -39,7 +39,7 @@ gulp.task('images', ['clean'], function() {
             interlaced: true,
             use: [pngquant()]
         }))
-        .pipe(gulp.dest(outDir));
+        .pipe(gulp.dest(outDir + 'images/'));
 });
 
 // Inline source
