@@ -23,7 +23,7 @@ var outDir = 'out/';
 var paths = {
     scripts: ['include/buffer/buffer.js'],
     html: ['index.html'],
-    images: ['*.png'],
+    images: ['**/*.png'],
     extras: ['manifest.json', 'favicon.ico'],
 };
 
