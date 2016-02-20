@@ -371,6 +371,11 @@
             var rightConversionTypeFromDOM = RightConversionTypes[rightTypeSelect.value];
             if (rightConversionTypeFromDOM !== rightConversionType)
                 onRightTypeChanged();
+
+            // We queue a task to setup the offline cache so it doesn't affect the critical path.
+            setTimeout(function() {
+                setupOfflineCache();
+            }, 500);
         }
 
         function updateConversion() {
@@ -564,6 +569,12 @@
         } catch (error) {
             onError('Failed to convert (' + error + ').');
         }
+    }
+
+    function setupOfflineCache() {
+        if (!('serviceWorker' in navigator))
+            return;
+        navigator.serviceWorker.register('single-page-offline-service-worker.js');
     }
     </script>
 </head>

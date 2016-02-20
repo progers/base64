@@ -24,7 +24,7 @@ var paths = {
     scripts: ['include/buffer/buffer.js'],
     html: ['index.html'],
     images: ['images/*.png'],
-    extras: ['manifest.json', 'favicon.ico'],
+    extras: ['manifest.json', 'favicon.ico', 'single-page-offline-service-worker.js'],
 };
 
 gulp.task('clean', function() {
