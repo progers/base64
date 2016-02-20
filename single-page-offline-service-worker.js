@@ -1,11 +1,10 @@
+'use strict';
 // Very simple single page offline service worker.
 //
 // On the main page include:
 //     if (!('serviceWorker' in navigator))
 //         return;
 //     navigator.serviceWorker.register('single-page-offline-service-worker.js');
-
-'use strict';
 
 // Version key for cache in case entries need to be removed in the future.
 var version = 'v1.0.0';
