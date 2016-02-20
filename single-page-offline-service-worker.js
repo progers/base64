@@ -8,7 +8,7 @@
 
 // Version key for cache in case entries need to be removed in the future.
 var version = 'v1.0.0';
-var offlineFiles = [ '/', 'index.html' ];
+var offlineFiles = [ 'index.html' ];
 
 self.addEventListener('install', function(event) {
     function cacheAllFiles(cache) {
