@@ -8,8 +8,10 @@ function asyncToBase64(value, encoding, onSuccess, onError) {
                 onSuccess(result);
                 break;
             case 'utf8':
-                var utf8ByteArray = new TextEncoderLite().encode(value);
-                var result = uint8ToBase64(utf8ByteArray);
+                value = new TextEncoderLite().encode(value);
+                // Fall through into byte array case.
+            case undefined:
+                var result = uint8ToBase64(value);
                 onSuccess(result);
                 break;
             default:

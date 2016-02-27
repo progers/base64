@@ -572,3 +572,18 @@ QUnit.test('Control character decoding', function( assert ) {
         function failure(error) { assert.ok(false, error); }
     );
 });
+
+QUnit.test('Byte array conversion without encoding', function( assert ) {
+    assert.expect(1);
+    var done = assert.async(1);
+
+    asyncToBase64(
+        new Uint32Array([0, 1, 2, 3]),
+        undefined,
+        function success(result) {
+            assert.equal(result, 'AAECAw==', 'Basic byte array');
+            done();
+        },
+        function failure(error) { assert.ok(false, error); }
+    );
+});
