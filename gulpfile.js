@@ -9,8 +9,7 @@
 //
 // The purpose of this build step is just to crush the output filesize. Everything should work
 // when loaded directly out of the root directory without running this build step.
-//
-// Some optimizations have not been performed to make things easier to debug and hack. Cost: 20Kb.
+
 var gulp = require('gulp');
 
 var del = require('del');
