@@ -268,7 +268,7 @@
             outline: none;
         }
     </style>
-    <script src="include/buffer/buffer.js" inline></script>
+    <script src="base64.js" inline></script>
     <script>
         'use strict';
 
@@ -555,29 +555,11 @@
             return '';
         }
 
-    function asyncToBase64(value, encoding, onSuccess, onError) {
-        try {
-            var result = new buffer.Buffer(value, encoding).toString('base64');
-            onSuccess(result);
-        } catch (error) {
-            onError('Failed to convert (' + error + ').');
+        function setupOfflineCache() {
+            if (!('serviceWorker' in navigator))
+                return;
+            navigator.serviceWorker.register('single-page-offline-service-worker.js');
         }
-    }
-
-    function asyncFromBase64(value, encoding, onSuccess, onError) {
-        try {
-            var result = new buffer.Buffer(value, 'base64').toString(encoding);
-            onSuccess(result);
-        } catch (error) {
-            onError('Failed to convert (' + error + ').');
-        }
-    }
-
-    function setupOfflineCache() {
-        if (!('serviceWorker' in navigator))
-            return;
-        navigator.serviceWorker.register('single-page-offline-service-worker.js');
-    }
     </script>
 </head>
 <body>
