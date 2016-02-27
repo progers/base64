@@ -107,20 +107,23 @@ Base64Utils.cleanupBase64 = function(dirty) {
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 ;(function (exports) {
-    var i;
-    var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-    var lookup = [];
-    for (i = 0; i < code.length; i++)
-        lookup[i] = code[i]
-    var revLookup = [];
+    var i, code, lookup, revLookup, Arr;
 
-    for (i = 0; i < code.length; ++i)
-        revLookup[code.charCodeAt(i)] = i;
+    function initIfNeeded() {
+        if (code !== undefined)
+            return;
 
-    revLookup['-'.charCodeAt(0)] = 62;
-    revLookup['_'.charCodeAt(0)] = 63;
-
-    var Arr = (typeof Uint8Array !== 'undefined') ? Uint8Array : Array;
+        code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        lookup = [];
+        for (i = 0; i < code.length; i++)
+            lookup[i] = code[i]
+        revLookup = [];
+        for (i = 0; i < code.length; ++i)
+            revLookup[code.charCodeAt(i)] = i;
+        revLookup['-'.charCodeAt(0)] = 62;
+        revLookup['_'.charCodeAt(0)] = 63;
+        Arr = (typeof Uint8Array !== 'undefined') ? Uint8Array : Array;
+    }
 
     function decode(elt) {
         var v = revLookup[elt.charCodeAt(0)];
@@ -128,6 +131,8 @@ Base64Utils.cleanupBase64 = function(dirty) {
     }
 
     function b64ToByteArray(b64) {
+        initIfNeeded();
+
         var i, j, l, tmp, placeHolders, arr;
 
         if (b64.length % 4 > 0)
@@ -190,6 +195,8 @@ Base64Utils.cleanupBase64 = function(dirty) {
     }
 
     function uint8ToBase64(uint8) {
+        initIfNeeded();
+
         var i;
         var extraBytes = uint8.length % 3; // if we have 1 byte left, pad 2 bytes
         var output = '';

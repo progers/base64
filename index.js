@@ -2,20 +2,9 @@
 // Business logic for base64 encoder (index.html).
 // Requires asyncToBase64 and asyncFromBase64 from base64.js
 
-// Must keep in sync with the #left type's customSelect DOM.
-var LeftConversionTypes = {
-    'text': {displayName: 'Text', isImage: false},
-    'image': {displayName: 'Image', isImage: true}
-}
-var leftConversionType = LeftConversionTypes[Object.keys(LeftConversionTypes)[0]];
-
-// Must keep in sync with the #right type's customSelect DOM.
-var RightConversionTypes = {
-    'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
-    'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
-    'base64image': {displayName: 'Base64 (image)', encoding: 'utf8', forImage: true}
-}
-var rightConversionType = RightConversionTypes[Object.keys(RightConversionTypes)[0]];
+// Initialization of these conversion type constants and locals is done in DOMContentLoaded.
+var LeftConversionTypes, RightConversionTypes;
+var leftConversionType, rightConversionType;
 
 // This state variable lets us change the conversion type without overwriting the user's last input.
 var userLastChangedRightSide = false;
@@ -28,6 +17,22 @@ var left, leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeT
 var right, rightTextarea, rightTypeSelect, rightTypeText;
 
 window.addEventListener('DOMContentLoaded', function() {
+    // Must keep in sync with the #left type's customSelect DOM.
+    LeftConversionTypes = {
+        'text': {displayName: 'Text', isImage: false},
+        'image': {displayName: 'Image', isImage: true}
+    }
+
+    // Must keep in sync with the #right type's customSelect DOM.
+    RightConversionTypes = {
+        'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
+        'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
+        'base64image': {displayName: 'Base64 (image)', encoding: 'utf8', forImage: true}
+    }
+
+    leftConversionType = LeftConversionTypes[Object.keys(LeftConversionTypes)[0]];
+    rightConversionType = RightConversionTypes[Object.keys(RightConversionTypes)[0]];
+
     left = document.getElementById('left');
     leftImageArea = left.querySelector('.imagearea');
     leftTextarea = left.querySelector('textarea');
