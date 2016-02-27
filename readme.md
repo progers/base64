@@ -3,7 +3,7 @@
 A small and simple tool to encode and decode base64.
 
 ## Features
-  * Encoding conversions to utf-8, ucs-2, and ascii.
+  * UTF-8 encoding.
   * Image drag and drop support.
   * Add-to-homescreen and offline support.
 

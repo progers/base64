@@ -21,7 +21,6 @@ var inlinesource = require('gulp-inline-source');
 var outDir = 'out/';
 
 var paths = {
-    scripts: ['include/buffer/buffer.js'],
     html: ['index.html'],
     images: ['images/*.png'],
     extras: ['manifest.json', 'favicon.ico', 'single-page-offline-service-worker.js'],
