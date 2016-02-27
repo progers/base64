@@ -282,7 +282,6 @@
         // Must keep in sync with the #right type's customSelect DOM.
         var RightConversionTypes = {
             'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
-            'base64ucs2': {displayName: 'Base64 (ucs2)', encoding: 'ucs2', forImage: false},
             'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
             'base64image': {displayName: 'Base64 (image)', encoding: 'utf8', forImage: true}
         }
@@ -558,7 +557,8 @@
         function setupOfflineCache() {
             if (!('serviceWorker' in navigator))
                 return;
-            navigator.serviceWorker.register('single-page-offline-service-worker.js');
+            // Disabled for testing.
+            // navigator.serviceWorker.register('single-page-offline-service-worker.js');
         }
     </script>
 </head>
@@ -608,7 +608,6 @@
                     <select>
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
-                        <option value="base64ucs2">Base64 (ucs2)</option>
                         <option value="base64image" disabled="true">Base64 (image)</option>
                     </select>
                     <span>Base64</span>
