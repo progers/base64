@@ -27,7 +27,7 @@ var currentFile;
 var left, leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
 var right, rightTextarea, rightTypeSelect, rightTypeText;
 
-window.onload = function() {
+window.addEventListener('DOMContentLoaded', function() {
     left = document.getElementById('left');
     leftImageArea = left.querySelector('.imagearea');
     leftTextarea = left.querySelector('textarea');
@@ -106,7 +106,7 @@ window.onload = function() {
     setTimeout(function() {
         setupOfflineCache();
     }, 500);
-}
+});
 
 function updateConversion() {
     // Cleanup any leftover errors.
