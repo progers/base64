@@ -32,26 +32,25 @@ gulp.task('clean', function() {
 
 // Optimize and copy images
 gulp.task('images', ['clean'], function() {
+    var imageminOptions = {
+        use: [pngquant({quality: '65-80', speed: 1})]
+    };
     return gulp.src(paths.images)
-        .pipe(imagemin({
-            progressive: true,
-            interlaced: true,
-            use: [pngquant()]
-        }))
+        .pipe(imagemin(imageminOptions))
         .pipe(gulp.dest(outDir + 'images/'));
 });
 
 gulp.task('minifyHtmlCssJs', ['clean'], function() {
     var inlineSourceOptions = {
         compress: false
-    }
+    };
     var htmlminOptions = {
         collapseWhitespace: true,
         minifyJS: true,
         minifyCSS: true,
         preserveLineBreaks: true,
         removeComments: true
-    }
+    };
     return gulp.src(paths.html)
         .pipe(inlineSource(inlineSourceOptions))
         .pipe(htmlmin(htmlminOptions))
