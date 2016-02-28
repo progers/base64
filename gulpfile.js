@@ -15,7 +15,8 @@ var gulp = require('gulp');
 var del = require('del');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
-var inlinesource = require('gulp-inline-source');
+var inlineSource = require('gulp-inline-source');
+var minifyInline = require('gulp-minify-inline');
 
 var outDir = 'out/';
 
@@ -40,13 +41,10 @@ gulp.task('images', ['clean'], function() {
         .pipe(gulp.dest(outDir + 'images/'));
 });
 
-// Inline source
-gulp.task('inlinesource', ['clean'], function () {
-    var options = {
-        compress: true
-    };
+gulp.task('minifyHtmlCssJs', ['clean'], function () {
     return gulp.src(paths.html)
-        .pipe(inlinesource(options))
+        .pipe(inlineSource())
+        .pipe(minifyInline())
         .pipe(gulp.dest(outDir));
 });
 
@@ -56,4 +54,4 @@ gulp.task('copy', ['clean'], function() {
         .pipe(gulp.dest(outDir));
 });
 
-gulp.task('default', ['clean', 'copy', 'images', 'inlinesource']);
+gulp.task('default', ['clean', 'copy', 'images', 'minifyHtmlCssJs']);
