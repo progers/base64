@@ -16,7 +16,7 @@ var del = require('del');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var inlineSource = require('gulp-inline-source');
-var minifyInline = require('gulp-minify-inline');
+var htmlmin = require('gulp-htmlmin');
 
 var outDir = 'out/';
 
@@ -41,10 +41,20 @@ gulp.task('images', ['clean'], function() {
         .pipe(gulp.dest(outDir + 'images/'));
 });
 
-gulp.task('minifyHtmlCssJs', ['clean'], function () {
+gulp.task('minifyHtmlCssJs', ['clean'], function() {
+    var inlineSourceOptions = {
+        compress: false
+    }
+    var htmlminOptions = {
+        collapseWhitespace: true,
+        minifyJS: true,
+        minifyCSS: true,
+        preserveLineBreaks: true,
+        removeComments: true
+    }
     return gulp.src(paths.html)
-        .pipe(inlineSource())
-        .pipe(minifyInline())
+        .pipe(inlineSource(inlineSourceOptions))
+        .pipe(htmlmin(htmlminOptions))
         .pipe(gulp.dest(outDir));
 });
 
