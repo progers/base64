@@ -267,6 +267,10 @@
         .customSelect select:focus {
             outline: none;
         }
+        /* Custom focus support because we cannot use parent CSS selectors. */
+        .customSelect#focused {
+            border-bottom: 1px solid rgba(0,0,0,0.87);
+        }
     </style>
 </head>
 <body>

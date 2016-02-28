@@ -71,6 +71,20 @@ window.addEventListener('DOMContentLoaded', function() {
         onRightTypeChanged();
     });
 
+    // Ensure there is a focus effect on the custom type select boxes.
+    leftTypeSelect.addEventListener('focus', function(event) {
+        leftTypeSelect.parentElement.setAttribute('id', 'focused');
+    });
+    leftTypeSelect.addEventListener('blur', function(event) {
+        leftTypeSelect.parentElement.removeAttribute('id');
+    });
+    rightTypeSelect.addEventListener('focus', function(event) {
+        rightTypeSelect.parentElement.setAttribute('id', 'focused');
+    });
+    rightTypeSelect.addEventListener('blur', function(event) {
+        rightTypeSelect.parentElement.removeAttribute('id');
+    });
+
     // Drag and drop support.
     var insideCount = 0;
     var leftContent = left.querySelector('.content');
