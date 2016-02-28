@@ -10,9 +10,8 @@
 
 var version = 'v1.0.2';
 
-// FIXME: Is it possible to serve from ./ and also have an offline app using manifest.json without
-// making two requests?
-var offlineFiles = [ './', './index.html' ];
+// Only cache the response from this directory. 'start_url' in manifest.json should also be './'
+var offlineFiles = [ './' ];
 
 self.addEventListener('install', function(event) {
     // Cache our list of files.
