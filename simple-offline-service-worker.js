@@ -16,7 +16,7 @@ var offlineFiles = [ './', './index.html' ];
 
 self.addEventListener('install', function(event) {
     // Cache our list of files.
-    event.waitUntil(caches.open(version).then(function(cache) {cache.addAll(offlineFiles); }));
+    event.waitUntil(caches.open(version).then(function(cache) { cache.addAll(offlineFiles); }));
 });
 
 self.addEventListener('activate', function(event) {
@@ -28,12 +28,13 @@ self.addEventListener('fetch', function(event) {
         fetch(event.request).then(function(networkReponse) {
             // Check if this request is already in our cache. We only want to cache previously
             // cached items to prevent the cache from getting polluted.
+            var clonedResponse = networkReponse.clone();
             caches.open(version).then(function(cache) {
                 cache.match(event.request).then(function(previouslyCachedResponse) {
                     if (!previouslyCachedResponse)
                         return;
                     // Clone the response since we're also returning it below.
-                    cache.put(event.request, networkReponse.clone());
+                    cache.put(event.request, clonedResponse);
                 });
             });
             return networkReponse;
