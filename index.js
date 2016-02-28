@@ -107,10 +107,9 @@ window.addEventListener('DOMContentLoaded', function() {
     if (rightConversionTypeFromDOM !== rightConversionType)
         onRightTypeChanged();
 
-    // We queue a task to setup the offline cache so it doesn't affect the critical path.
-    setTimeout(function() {
-        setupOfflineCache();
-    }, 500);
+    // Bootup our service worker for offline support.
+    if ('serviceWorker' in navigator)
+        navigator.serviceWorker.register('simple-offline-service-worker.js');
 });
 
 function updateConversion() {
@@ -286,11 +285,4 @@ function imageType(file) {
         case('ico'): return 'image/x-icon';
     }
     return '';
-}
-
-function setupOfflineCache() {
-    if (!('serviceWorker' in navigator))
-        return;
-    // Disabled for testing.
-    // navigator.serviceWorker.register('single-page-offline-service-worker.js');
 }

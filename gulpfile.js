@@ -23,7 +23,7 @@ var outDir = 'out/';
 var paths = {
     html: ['index.html'],
     images: ['images/*.png'],
-    extras: ['manifest.json', 'favicon.ico', 'single-page-offline-service-worker.js'],
+    extras: ['manifest.json', 'favicon.ico', 'simple-offline-service-worker.js'],
 };
 
 gulp.task('clean', function() {
