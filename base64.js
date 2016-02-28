@@ -1,7 +1,7 @@
 'use strict';
-
 // Async base64 encoding and decoding
 //   Bundles TextEncoderLite and b64.js for utf8 and typed array support.
+//   See: https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 
 function asyncToBase64(value, encoding, onSuccess, onError) {
     try {
@@ -116,7 +116,7 @@ Base64Utils.cleanupBase64 = function(dirty) {
         code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
         lookup = [];
         for (i = 0; i < code.length; i++)
-            lookup[i] = code[i]
+            lookup[i] = code[i];
         revLookup = [];
         for (i = 0; i < code.length; ++i)
             revLookup[code.charCodeAt(i)] = i;
@@ -278,7 +278,7 @@ Base64Utils.cleanupBase64 = function(dirty) {
                     // 2 leads in a row
                     if (codePoint < 0xDC00) {
                         if ((units -= 3) > -1)
-                            bytes.push(0xEF, 0xBF, 0xBD)
+                            bytes.push(0xEF, 0xBF, 0xBD);
                         leadSurrogate = codePoint;
                         continue;
                     } else {

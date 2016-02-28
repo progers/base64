@@ -3,9 +3,10 @@
 A small and simple tool to encode and decode base64.
 
 ## Features
-  * UTF-8 encoding.
-  * Image drag and drop support.
-  * Add-to-homescreen and offline support.
+  * UTF-8.
+  * Image drag and drop.
+  * Add-to-homescreen.
+  * Offline.
 
 ## Modifying
 Just open [index.html](index.html). Everything except for https-only features (offline) works from the local filesystem.

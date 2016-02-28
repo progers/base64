@@ -123,7 +123,7 @@ function updateConversion() {
     if (leftConversionType.isImage)
         convertImage();
     else
-        bidirectionalTextConversion(!userLastChangedRightSide)
+        bidirectionalTextConversion(!userLastChangedRightSide);
 }
 
 // TODO: Gracefully disable this if the FileReader/etc APIs are not available.
