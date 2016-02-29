@@ -54,7 +54,7 @@
             -webkit-flex-direction: row;
             flex-direction: row;
         }
-        .io .tile {
+        .tile {
             background: #fff;
             border-radius: 2px;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);
@@ -71,9 +71,9 @@
             width: 0;
         }
         /* Ensure there's not twice the padding when side-by-side. */
-        .io .tile#left { margin-right: 1em; }
-        .io .tile#right { margin-left: 1em; }
-        .io .tile .type {
+        .#leftTile { margin-right: 1em; }
+        .#rightTile { margin-left: 1em; }
+        .type {
             border-bottom: 1px solid #dbdbdb;
             color: rgba(0,0,0,0.87);
             font-size: 18px;
@@ -83,7 +83,7 @@
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
         }
-        .io .tile .content {
+        .content {
             font-family: monospace;
             font-size: 14px;
             height: 100%;
@@ -96,7 +96,7 @@
             -webkit-flex: 1 1 auto;
             flex: 1 1 auto;
         }
-        .io .tile .content .textarea {
+        .textarea {
             border: none;
             font-family: inherit;
             font-size: inherit;
@@ -112,11 +112,11 @@
             resize: none;
             width: 100%;
         }
-        .io .tile .content .textarea[readonly],  .io .tile .content .textarea[readonly='readonly'] {
+        .textarea[readonly], .textarea[readonly='readonly'] {
             background: #fff;
             color: rgba(0,0,0,0.54);
         }
-        .io .tile .content .hidden {
+        .hidden {
             display: none;
         }
         .errorSource {
@@ -126,7 +126,7 @@
         .errorDestination {
             color: rgba(0,0,0,0.38);
         }
-        .io .tile .content .imagearea {
+        .imagearea {
             background-position: center center;
             background-repeat: no-repeat;
             background-size: contain;
@@ -144,7 +144,7 @@
         }
         /* Custom upload button to workaround multiple cross-browser issues. */
         /* The basic approach is to hide an upload control on top of a button image. */
-        .io .tile .content .imagearea .customUpload {
+        .customUpload {
             bottom: 0;
             height: 60px;
             left: 0;
@@ -160,24 +160,24 @@
             width: 60px;
         }
         /* When an image is present, move button to the top-left. */
-        .io .tile .content .imagearea.containsImage .customUpload {
+        .imagearea.containsImage .customUpload {
             margin: 0;
             position: relative;
         }
-        .io .tile .content .imagearea .customUpload svg {
+        .customUpload svg {
             /* drop-shadow does not support the exact blur syntax so this has been approximated. */
             -webkit-filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
             filter: drop-shadow(0 2px 1px rgba(0,0,0,0.14)) drop-shadow(0 1px 5px rgba(0,0,0,0.12)) drop-shadow(0 1px 1px rgba(0,0,0,0.1));
             height: 100%;
             width: 100%;
         }
-        .io .tile .content .imagearea .customUpload svg path {
+        .customUpload svg path {
             fill: #2196f3;
         }
-        .io .tile .content .imagearea .customUpload:hover svg path {
+        .customUpload:hover svg path {
             fill: #1976d2;
         }
-        .io .tile .content .imagearea .customUpload input {
+        .customUpload input {
             cursor: pointer;
             height: 200%;
             left: 0;
@@ -191,7 +191,7 @@
             z-index: 99;
         }
         /* Drag and drop styles. */
-        #left .dragover {
+        #leftTile .dragover {
             background-color: #e1f5fe;
         }
         .ad {
@@ -208,7 +208,7 @@
                 -webkit-flex-direction: column;
                 flex-direction: column;
             }
-            .io .tile {
+            .tile {
                 border-radius: 0;
                 box-shadow: none;
                 margin: 0;
@@ -219,8 +219,8 @@
                 width: 100%;
             }
             /* Remove side-by-side padding special-case. */
-            .io .tile#left { margin-right: 0; }
-            .io .tile#right { margin-left: 0; }
+            #leftTile { margin-right: 0; }
+            #rightTile { margin-left: 0; }
         }
 
         /* Custom select box to workaround multiple cross-browser issues. */
@@ -278,27 +278,27 @@
         Base64 Converter
     </div>
     <div class="io">
-        <div id="left" class="tile">
+        <div id="leftTile" class="tile">
             <div class="type">
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
                 <!-- Must keep these values in sync with the LeftConversionTypes array. -->
                 <div class="customSelect">
-                    <select>
+                    <select id="leftTypeSelect">
                         <option value="text" selected="true">Text</option>
                         <option value="image">Image</option>
                     </select>
-                    <span>Text</span>
+                    <span id="leftTypeText">Text</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
                         <path d="M0 0L100 0L50 80Z" />
                     </svg>
                 </div>
             </div>
-            <div class="content">
-                <textarea class="textarea" spellcheck="false">Hello world</textarea>
-                <div class="imagearea hidden">
+            <div id="leftContent" class="content">
+                <textarea id="leftTextarea" class="textarea" spellcheck="false">Hello world</textarea>
+                <div id="leftImageArea" class="imagearea hidden">
                     <!-- Custom upload button to workaround multiple cross-browser issues. -->
                     <div class="customUpload">
-                        <input type="file" accept="image/*" title="">
+                        <input id="leftImageInput" type="file" accept="image/*" title="">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <defs>
                                 <clipPath id="clipPath">
@@ -311,24 +311,24 @@
                 </div>
             </div>
         </div>
-        <div id="right" class="tile">
+        <div id="rightTile" class="tile">
             <div class="type">
                 <!-- Custom select box to workaround multiple cross-browser issues. -->
                 <!-- Must keep these values in sync with the RightConversionTypes array. -->
                 <div class="customSelect">
-                    <select>
+                    <select id="rightTypeSelect">
                         <option value="base64utf8" selected="true">Base64 (utf8)</option>
                         <option value="base64ascii">Base64 (ascii)</option>
                         <option value="base64image" disabled="true">Base64 (image)</option>
                     </select>
-                    <span>Base64</span>
+                    <span id="rightTypeText">Base64</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="-100 -100 300 300">
                         <path d="M0 0L100 0L50 80Z" />
                     </svg>
                 </div>
             </div>
             <div class="content">
-                <textarea class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
+                <textarea id="rightTextarea" class="textarea" spellcheck="false">SGVsbG8gd29ybGQ=</textarea>
             </div>
         </div>
     </div>

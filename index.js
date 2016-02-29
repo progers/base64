@@ -2,8 +2,14 @@
 // Business logic for base64 encoder (index.html).
 // Requires asyncToBase64 and asyncFromBase64 from base64.js
 
+// Cached DOM lookups, initialized in DOMContentLoaded.
+var leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
+var rightTextarea, rightTypeSelect, rightTypeText;
+
 // Initialization of these conversion type constants and locals is done in DOMContentLoaded.
 var LeftConversionTypes, RightConversionTypes;
+
+// These state variables are for the selected conversion types, initialized in DOMContentLoaded.
 var leftConversionType, rightConversionType;
 
 // This state variable lets us change the conversion type without overwriting the user's last input.
@@ -12,18 +18,14 @@ var userLastChangedRightSide = false;
 // FIXME: Check if this can be cleared more often to reduce peak memory usage.
 var currentFile;
 
-// Cached DOM lookups.
-var left, leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
-var right, rightTextarea, rightTypeSelect, rightTypeText;
-
 window.addEventListener('DOMContentLoaded', function() {
-    // Must keep in sync with the #left type's customSelect DOM.
+    // Must keep in sync with #leftTypeSelect's DOM.
     LeftConversionTypes = {
         'text': {displayName: 'Text', isImage: false},
         'image': {displayName: 'Image', isImage: true}
     }
 
-    // Must keep in sync with the #right type's customSelect DOM.
+    // Must keep in sync with the #rightTypeSelect's DOM.
     RightConversionTypes = {
         'base64utf8': {displayName: 'Base64', encoding: 'utf8', forImage: false},
         'base64ascii': {displayName: 'Base64 (ascii)', encoding: 'ascii', forImage: false},
@@ -33,17 +35,14 @@ window.addEventListener('DOMContentLoaded', function() {
     leftConversionType = LeftConversionTypes[Object.keys(LeftConversionTypes)[0]];
     rightConversionType = RightConversionTypes[Object.keys(RightConversionTypes)[0]];
 
-    left = document.getElementById('left');
-    leftImageArea = left.querySelector('.imagearea');
-    leftTextarea = left.querySelector('textarea');
-    leftImageInput = left.querySelector('.customUpload input');
-    leftTypeSelect = left.querySelector('.type select');
-    leftTypeText = left.querySelector('.type span');
-
-    right = document.getElementById('right');
-    rightTextarea = right.querySelector('textarea');
-    rightTypeSelect = right.querySelector('.type select');
-    rightTypeText = right.querySelector('.type span');
+    leftImageArea = document.getElementById('leftImageArea');
+    leftTextarea = document.getElementById('leftTextarea');
+    leftImageInput = document.getElementById('leftImageInput');
+    leftTypeSelect = document.getElementById('leftTypeSelect');
+    leftTypeText = document.getElementById('leftTypeText');
+    rightTextarea = document.getElementById('rightTextarea');
+    rightTypeSelect = document.getElementById('rightTypeSelect');
+    rightTypeText = document.getElementById('rightTypeText');
 
     leftTextarea.addEventListener('input', function() {
         userLastChangedRightSide = false;
@@ -87,7 +86,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Drag and drop support.
     var insideCount = 0;
-    var leftContent = left.querySelector('.content');
+    var leftContent = document.getElementById('leftContent');
     leftContent.addEventListener('dragenter', function(event) {
         insideCount++;
         leftTextarea.classList.add('dragover');
