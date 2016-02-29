@@ -6,11 +6,14 @@
 //         navigator.serviceWorker.register('simple-offline-service-worker.js');
 //
 // This cache always requests from the network to keep the cache fresh. There is a tradeoff here
-// because we'll wait ages for a slow network despite having a cached response ready to go.
+// because it'll wait ages for a slow network despite having a cached response ready to go. If stale
+// content is acceptable, use an 'eventually fresh' approach as described by Jake Archibald or
+// Nicolás Bevacqua in https://ponyfoo.com/articles/progressive-networking-serviceworker
 
 var version = 'v1.0.2';
 
-// Only cache the response from this directory. 'start_url' in manifest.json should also be './'
+// To cache https://yoururl/subdirectory/ without listing index.html, use './'. If using a manifest,
+// 'start_url' should also be './'. You can also add additional files to this list.
 var offlineFiles = [ './' ];
 
 self.addEventListener('install', function(event) {
@@ -24,22 +27,25 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', function(event) {
     event.respondWith(
+        // FIXME: We should send off the fetch request and check the cache in parallel.
         fetch(event.request).then(function(networkReponse) {
             // Check if this request is already in our cache. We only want to cache previously
             // cached items to prevent the cache from getting polluted.
-            var clonedResponse = networkReponse.clone();
-            caches.open(version).then(function(cache) {
-                cache.match(event.request).then(function(previouslyCachedResponse) {
-                    if (!previouslyCachedResponse)
-                        return;
+            return caches.open(version).then(function(cache) {
+                return cache.match(event.request).then(function(cachedResponse) {
+                    if (!cachedResponse)
+                        return networkReponse;
                     // Clone the response since we're also returning it below.
-                    cache.put(event.request, clonedResponse);
+                    cache.put(event.request, networkReponse.clone());
+                    return networkReponse;
                 });
             });
-            return networkReponse;
-        }).catch(function(networkIssue) {
-            // Return from the cache if available, or explode which will 404.
-            return caches.match(event.request);
+        }).catch(function(networkError) {
+            return caches.open(version).then(function(cache) {
+                return cache.match(event.request).then(function(cachedResponse) {
+                    return cachedResponse || networkError;
+                });
+            });
         })
     );
 });
