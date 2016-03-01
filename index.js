@@ -2,14 +2,14 @@
 // Business logic for base64 encoder (index.html).
 // Requires asyncToBase64 and asyncFromBase64 from base64.js
 
-// Cached DOM lookups, initialized in DOMContentLoaded.
+// Cached DOM lookups, initialized in init().
 var leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
 var rightTextarea, rightTypeSelect, rightTypeText;
 
-// Initialization of these conversion type constants and locals is done in DOMContentLoaded.
+// Initialization of these conversion type constants and locals is done in init().
 var LeftConversionTypes, RightConversionTypes;
 
-// These state variables are for the selected conversion types, initialized in DOMContentLoaded.
+// These state variables are for the selected conversion types, initialized in init().
 var leftConversionType, rightConversionType;
 
 // This state variable lets us change the conversion type without overwriting the user's last input.
@@ -18,7 +18,7 @@ var userLastChangedRightSide = false;
 // FIXME: Check if this can be cleared more often to reduce peak memory usage.
 var currentFile;
 
-window.addEventListener('DOMContentLoaded', function() {
+function init() {
     // Must keep in sync with #leftTypeSelect's DOM.
     LeftConversionTypes = {
         'text': {displayName: 'Text', isImage: false},
@@ -119,11 +119,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var rightConversionTypeFromDOM = RightConversionTypes[rightTypeSelect.value];
     if (rightConversionTypeFromDOM !== rightConversionType)
         onRightTypeChanged();
-
-    // Bootup our service worker for offline support.
-    if ('serviceWorker' in navigator)
-        navigator.serviceWorker.register('simple-offline-service-worker.js');
-});
+}
 
 function updateConversion() {
     // Cleanup any leftover errors.
@@ -299,3 +295,7 @@ function imageType(file) {
     }
     return '';
 }
+
+// Hookup our listeners and start the show.
+// This must be called after the DOM has loaded but does not need to be called immediately on load.
+init();

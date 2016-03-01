@@ -17,6 +17,7 @@ var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var inlineSource = require('gulp-inline-source');
 var htmlmin = require('gulp-htmlmin');
+var replace = require('gulp-replace-task');
 
 var outDir = 'out/';
 
@@ -51,9 +52,18 @@ gulp.task('minifyHtmlCssJs', ['clean'], function() {
         preserveLineBreaks: true,
         removeComments: true
     };
+    var replaceOptions = {
+        patterns: [
+            {
+                match: /deferjscompilation/g,
+                replacement: 'type="text/deferjscompilation"'
+            }
+        ]
+    };
     return gulp.src(paths.html)
         .pipe(inlineSource(inlineSourceOptions))
         .pipe(htmlmin(htmlminOptions))
+        .pipe(replace(replaceOptions))
         .pipe(gulp.dest(outDir));
 });
 

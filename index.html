@@ -333,6 +333,41 @@
     </div>
     <div class="ad"></div>
 </body>
-<script src="base64.js" inline></script>
-<script src="index.js" inline></script>
+<script id="base64js" src="base64.js" inline deferjscompilation></script>
+<script id="indexjs" src="index.js" inline deferjscompilation></script>
+<script>
+'use strict';
+
+// Defer script compilation by using an invalid script type and then re-inserting the script after
+// the first frame is up.
+window.addEventListener('DOMContentLoaded', function() {
+    window.requestAnimationFrame(function() {
+        // This second rAF should not be required but testing showed we do not get the benefits
+        // of deferred compilation unless we have two.
+        // TODO: File a bug about this.
+        window.requestAnimationFrame(function() {
+            setTimeout(function() {
+                var base64js = document.getElementById('base64js');
+                var indexjs = document.getElementById('indexjs');
+                var parent = base64js.parentNode;
+
+                parent.removeChild(base64js);
+                parent.removeChild(indexjs);
+
+                var newBase64js = document.createElement('script');
+                newBase64js.text = base64js.text;
+                parent.appendChild(newBase64js);
+
+                var newIndexJs = document.createElement('script');
+                newIndexJs.text = indexjs.text;
+                parent.appendChild(newIndexJs);
+            }, 0);
+        });
+    });
+});
+
+// Bootup our service worker for offline support.
+if ('serviceWorker' in navigator)
+    navigator.serviceWorker.register('simple-offline-service-worker.js');
+</script>
 </html>
