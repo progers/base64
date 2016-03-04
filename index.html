@@ -221,6 +221,10 @@
             /* Remove side-by-side padding special-case. */
             #leftTile { margin-right: 0; }
             #rightTile { margin-left: 0; }
+            /* Workaround for crbug.com/586872 and Android 4.3 where the background is visible. */
+            body {
+                background: #fff;
+            }
         }
 
         /* Custom select box to workaround multiple cross-browser issues. */
