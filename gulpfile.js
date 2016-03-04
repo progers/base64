@@ -17,13 +17,15 @@ var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
 var inlineSource = require('gulp-inline-source');
 var htmlmin = require('gulp-htmlmin');
+var uglify = require('gulp-uglify');
 
 var outDir = 'out/';
 
 var paths = {
     html: ['index.html'],
     images: ['images/*.png'],
-    extras: ['manifest.json', 'favicon.ico', 'simple-offline-service-worker.js'],
+    extras: ['manifest.json', 'favicon.ico'],
+    scripts: ['simple-offline-service-worker.js']
 };
 
 gulp.task('clean', function() {
@@ -57,10 +59,16 @@ gulp.task('minifyHtmlCssJs', ['clean'], function() {
         .pipe(gulp.dest(outDir));
 });
 
+gulp.task('minifyExternalScripts', ['clean'], function() {
+    return gulp.src(paths.scripts)
+        .pipe(uglify())
+        .pipe(gulp.dest(outDir));
+});
+
 gulp.task('copy', ['clean'], function() {
     // Copy extras
     gulp.src(paths.extras)
         .pipe(gulp.dest(outDir));
 });
 
-gulp.task('default', ['clean', 'copy', 'images', 'minifyHtmlCssJs']);
+gulp.task('default', ['clean', 'copy', 'images', 'minifyHtmlCssJs', 'minifyExternalScripts']);
