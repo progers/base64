@@ -2,10 +2,6 @@
 // Business logic for base64 encoder (index.html).
 // Requires asyncToBase64 and asyncFromBase64 from base64.js
 
-// Cached DOM lookups, initialized in DOMContentLoaded.
-var leftImageArea, leftTextarea, leftImageInput, leftTypeSelect, leftTypeText;
-var rightTextarea, rightTypeSelect, rightTypeText;
-
 // Initialization of these conversion type constants and locals is done in DOMContentLoaded.
 var LeftConversionTypes, RightConversionTypes;
 
@@ -34,15 +30,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
     leftConversionType = LeftConversionTypes[Object.keys(LeftConversionTypes)[0]];
     rightConversionType = RightConversionTypes[Object.keys(RightConversionTypes)[0]];
-
-    leftImageArea = document.getElementById('leftImageArea');
-    leftTextarea = document.getElementById('leftTextarea');
-    leftImageInput = document.getElementById('leftImageInput');
-    leftTypeSelect = document.getElementById('leftTypeSelect');
-    leftTypeText = document.getElementById('leftTypeText');
-    rightTextarea = document.getElementById('rightTextarea');
-    rightTypeSelect = document.getElementById('rightTypeSelect');
-    rightTypeText = document.getElementById('rightTypeText');
 
     leftTextarea.addEventListener('input', function() {
         userLastChangedRightSide = false;
@@ -86,7 +73,6 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Drag and drop support.
     var insideCount = 0;
-    var leftContent = document.getElementById('leftContent');
     leftContent.addEventListener('dragenter', function(event) {
         insideCount++;
         leftTextarea.classList.add('dragover');
