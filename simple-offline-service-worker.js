@@ -10,7 +10,7 @@
 // content is acceptable, use an 'eventually fresh' approach as described by Jake Archibald or
 // Nicolás Bevacqua in https://ponyfoo.com/articles/progressive-networking-serviceworker
 
-var version = 'v1.0.2';
+var version = 'v4.2.0';
 
 // To cache https://yoururl/subdirectory/ without listing index.html, use './'. If using a manifest,
 // 'start_url' should also be './'. You can also add additional files to this list.
@@ -18,11 +18,25 @@ var offlineFiles = [ './' ];
 
 self.addEventListener('install', function(event) {
     // Cache our list of files.
-    event.waitUntil(caches.open(version).then(function(cache) { cache.addAll(offlineFiles); }));
+    event.waitUntil(
+        caches.open(version).then(function(cache) {
+            return cache.addAll(offlineFiles).then(function() {
+                return self.skipWaiting();
+            });
+        })
+    );
 });
 
+// Remove any stale cache entries.
 self.addEventListener('activate', function(event) {
-    event.waitUntil(self.clients.claim());
+    event.waitUntil(
+        caches.keys().then(function(keys) {
+            return Promise.all(keys.map(function(key) {
+                if (key !== version)
+                    return caches.delete(key);
+            }));
+        })
+    );
 });
 
 self.addEventListener('fetch', function(event) {
