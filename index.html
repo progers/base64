@@ -3,7 +3,7 @@
 <head>
     <!-- The first two viewport values are required for Chrome, see: https://crbug.com/591179. -->
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Fast and simple tool to convert to and from base64.">
+    <meta name="description" content="A fast and simple tool to convert to and from base64.">
     <meta name="theme-color" content="#2196f3">
     <link rel="canonical" href="https://pr.gg/base64/">
     <link rel="manifest" href="manifest.json">
@@ -20,7 +20,7 @@
     <meta property=og:type content=website>
     <meta property=og:image content=https://pr.gg/base64/images/appicon192.png>
     <meta property=og:url content="https://pr.gg/base64/">
-    <meta property=og:description content="Fast and simple tool to convert to and from base64.">
+    <meta property=og:description content="A fast and simple tool to convert to and from base64.">
     <title>Base64 Converter</title>
     <style>
         html, body {
@@ -49,6 +49,16 @@
 
             -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
+        }
+        .topRight {
+            color: rgba(250,250,250,0.8);
+            float: right;
+            font-size: 14px;
+            /* This aligns the link when directly next to the header. */
+            padding-top: 4px;
+        }
+        .topRight:hover, .topRight:focus {
+            color: rgb(250,250,250);
         }
         .io {
             -webkit-flex: 1 1 auto;
@@ -285,6 +295,7 @@
 <body>
     <div class="header">
         Base64 Converter
+        <a class="topRight" href="https://github.com/progers/base64">view on github</a>
     </div>
     <div class="io">
         <div id="leftTile" class="tile">
