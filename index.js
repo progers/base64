@@ -166,6 +166,8 @@ function convertImage() {
     reader.onerror = function(result) {
         error(result.message);
     };
+
+    rightTextarea.value = 'Converting...';
     reader.readAsArrayBuffer(currentFile);
 }
 
