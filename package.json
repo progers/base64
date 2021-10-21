@@ -6,7 +6,8 @@
   "main": "index.html",
   "devDependencies": {
     "del": "^2.2.0",
-    "gulp": "^3.9.1",
+    "gulp": "4.0.2",
+    "graceful-fs": "4.2.2",
     "gulp-htmlmin": "^1.3.0",
     "gulp-imagemin": "^2.4.0",
     "gulp-inline-source": "^2.1.0",
